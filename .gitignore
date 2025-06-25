@@ -1,0 +1,32 @@
+# Archivos y carpetas del sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Configuraciones de editores y entornos
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Node modules (por si usás node en algún momento)
+node_modules/
+
+# Archivos de log
+*.log
+
+# Archivos temporales y cachés
+*.tmp
+*.temp
+*.bak
+*.swp
+*.lock
+
+# Archivos de salida o builds (si llegás a compilar algo)
+dist/
+build/
+
+# Archivos específicos de sistema o paquetes
+*.env
