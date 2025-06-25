@@ -4,12 +4,13 @@ Esta carpeta contiene todo el código fuente y los recursos del juego **Buscamin
 
 ## 📂 Estructura
 
+```
 app/
 ├── index.html # Página principal del juego
 ├── img/ # Carpeta de imágenes usadas en el juego
 ├── js/ # Archivos JavaScript con la lógica del juego
 ├── styles/ # Archivos CSS para los estilos y diseño
-
+```
 
 ---
 
