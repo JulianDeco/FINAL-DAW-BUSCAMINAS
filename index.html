@@ -1,14 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-
-    <link rel="stylesheet" href="./styles/normalize.css">
-    <link rel="stylesheet" href="./styles/style.css">
-</head>
-<body>
-    <script src="./js/main.js"></script>
-</body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Minesweeper</title>
+		<link rel="stylesheet" href="./styles/normalize.css" />
+		<link rel="stylesheet" href="./styles/style.css" />
+		<script src="./app/js/global_variables.js" defer></script>
+		<script src="./app/js/board.js" defer></script>
+		<script src="./app/js/main.js" defer></script>
+	</head>
+	<body>
+		<header>
+			<h3 class="title">Minesweeper</h3>
+		</header>
+		<main>
+			<div class="game-container">
+				<div class="game-header">
+					<div class="game-stats">
+						<div class="stat-label">
+							<div id="stat-label-mines">Minas</div>
+							<div id="stat-label-time">Tiempo</div>
+						</div>
+						<div class="stat-value">
+							<div id="stat-value-remaining">10</div>
+							<div id="stat-value-time">0</div>
+						</div>
+					</div>
+					<button class="start-reset-btn" id="reset-btn"></button>
+				</div>
+				<div class="game-board">
+					<div id="game-board"></div>
+				</div>
+			</div>
+		</main>
+		<section class="footer-board">
+			<div class="footer-board-difficulty">
+				<div class="difficulty-selector"></div>
+			</div>
+		</section>
+		<footer>
+			<p>Desarrollo y Arquitecturas Web 2025 - Proyecto Final</p>
+		</footer>
+	</body>
 </html>
