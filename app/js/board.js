@@ -49,10 +49,15 @@ function randomlyAssignMines(gameBoard, minesCount, boardSize) {
 	return gameBoard;
 }
 
+function flagHandlerCountHtml() {
+	var flag_html = document.getElementById('stat-value-flags');
+	flag_html.textContent = flags;
+}
+
 // Se formatean minutes y segundos a dos digitos cada uno
 // Ejemplo minuto 5 transformado a 05
 function formatTwoDigits(number) {
-	if (number < 10){
+	if (number < 10) {
 		return '0' + number;
 	}
 	return number;
@@ -60,7 +65,10 @@ function formatTwoDigits(number) {
 
 // Handler del timer que se ejecuta una vez presionada alguna celda tanto con click izquierdo como derecho
 function timeHandler() {
+	var timerHtml = document.getElementById('stat-value-time');
+
 	timer = formatTwoDigits(minutes) + ':' + formatTwoDigits(seconds);
+	timerHtml.textContent = timer;
 	if (seconds === 60) {
 		minutes += 1;
 		seconds = 0;
@@ -79,8 +87,8 @@ function leftClick(e, gameBoard) {
 	var gameBoardCell = gameBoard[row][col];
 
 	// Comprobar si el juego ya inicio
-	if (game_started === false) {
-		game_started = true;
+	if (gameStarted === false) {
+		gameStarted = true;
 		setInterval(timeHandler, 1000);
 	}
 
@@ -108,8 +116,8 @@ function rightClick(e, gameBoard) {
 	var gameBoardCell = gameBoard[row][col];
 
 	// Comprobar si el juego ya inicio
-	if (game_started === false) {
-		game_started = true;
+	if (gameStarted === false) {
+		gameStarted = true;
 		setInterval(timeHandler, 1000);
 	}
 
@@ -117,26 +125,23 @@ function rightClick(e, gameBoard) {
 		return
 	}
 
-	// Se comprueba si se llego al limite de flags(variable global)
-	if (flags === 1) {
-		return
-	}
-
-	if (gameBoardCell.flagged === false) {
+	if (gameBoardCell.flagged === false && flags > 0) {
 		// Logica de celda sin bandera
-		e.target.src = './app/img/flag.png'
+		e.target.src = './app/img/flag.png';
 		gameBoardCell.flagged = true;
 		// Se resta una flag
-		flags = flags - 1
+		flags = flags - 1;
+		flagHandlerCountHtml();
 		return
 	}
 
 	if (gameBoardCell.flagged === true) {
 		// Logica de celda con bandera
-		e.target.src = './app/img/tile.png'
+		e.target.src = './app/img/tile.png';
 		gameBoardCell.flagged = false;
 		// Se suma una flag
 		flags = flags + 1;
+		flagHandlerCountHtml();
 		return
 	}
 }

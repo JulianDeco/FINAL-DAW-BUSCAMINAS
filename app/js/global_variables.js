@@ -9,6 +9,6 @@ var bomb;
 var timer = '00:00';
 var seconds = 0;
 var minutes = 0;
-var game_started = false;
+var gameStarted = false;
 var timeout;
 var minesRemaining;
