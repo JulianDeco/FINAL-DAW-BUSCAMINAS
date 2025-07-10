@@ -46,3 +46,41 @@ function randomlyAssignMines(gameBoard, minesCount, boardSize) {
 	}
 	return gameBoard;
 }
+// Funcion que maneja el click y eventos segun los estados de la celda
+function addFunctionToCells(e, gameBoard) {
+	// Buscamos el elemento con clase cell-container más cercano para extraer row y column
+	var container = e.target.closest('.cell-container');
+	var row = container.dataset.row;
+	var col = container.dataset.col;
+
+	var gameBoardCell = gameBoard[row][col];
+
+	if (gameBoardCell.mined === true) {
+		// Logica para perder en el juego
+	}
+
+	if (gameBoardCell.flagged) {
+		// Logica de celda con bandera
+	}
+
+	if (gameBoardCell.opened === false) {
+		// Cambiamos el estado de la celda
+		gameBoardCell.opened = true;
+	}
+}
+
+// Funcion que asigna listeners de clic a cada celda
+function addClickListenerToCells(gameBoard) {
+	// Recuperamos todas las celdas
+	var cells = document.getElementsByClassName('cell-container');
+	// Recorremos las celdas
+	for (var i = 0; i < 64; i++) {
+		var cell = cells[i];
+		// Asignamos el evento de click a cada celda
+		cell.addEventListener('click', function(e) {
+			// Pasamos como parametro el evento y el tablero en JSON
+			addFunctionToCells(e, gameBoard);
+		});
+	}
+}
+
