@@ -44,8 +44,31 @@ function randomlyAssignMines(gameBoard, minesCount, boardSize) {
 			minesPlaced++;
 		}
 	}
+	bomb = minesPlaced;
+	flags = bomb
 	return gameBoard;
 }
+
+// Se formatean minutes y segundos a dos digitos cada uno
+// Ejemplo minuto 5 transformado a 05
+function formatTwoDigits(number) {
+	if (number < 10){
+		return '0' + number;
+	}
+	return number;
+}
+
+// Handler del timer que se ejecuta una vez presionada alguna celda tanto con click izquierdo como derecho
+function timeHandler() {
+	timer = formatTwoDigits(minutes) + ':' + formatTwoDigits(seconds);
+	if (seconds === 60) {
+		minutes += 1;
+		seconds = 0;
+		return
+	}
+	seconds += 1;
+}
+
 // Funcion que maneja el click y eventos segun los estados de la celda
 function leftClick(e, gameBoard) {
 	// Buscamos el elemento con clase cell-container más cercano para extraer row y column
@@ -55,7 +78,13 @@ function leftClick(e, gameBoard) {
 
 	var gameBoardCell = gameBoard[row][col];
 
-	if (gameBoardCell.flagged === true){
+	// Comprobar si el juego ya inicio
+	if (game_started === false) {
+		game_started = true;
+		setInterval(timeHandler, 1000);
+	}
+
+	if (gameBoardCell.flagged === true) {
 		return
 	}
 
@@ -78,7 +107,18 @@ function rightClick(e, gameBoard) {
 
 	var gameBoardCell = gameBoard[row][col];
 
+	// Comprobar si el juego ya inicio
+	if (game_started === false) {
+		game_started = true;
+		setInterval(timeHandler, 1000);
+	}
+
 	if (gameBoardCell.opened === true) {
+		return
+	}
+
+	// Se comprueba si se llego al limite de flags(variable global)
+	if (flags === 1) {
 		return
 	}
 
@@ -86,6 +126,8 @@ function rightClick(e, gameBoard) {
 		// Logica de celda sin bandera
 		e.target.src = './app/img/flag.png'
 		gameBoardCell.flagged = true;
+		// Se resta una flag
+		flags = flags - 1
 		return
 	}
 
@@ -93,6 +135,8 @@ function rightClick(e, gameBoard) {
 		// Logica de celda con bandera
 		e.target.src = './app/img/tile.png'
 		gameBoardCell.flagged = false;
+		// Se suma una flag
+		flags = flags + 1;
 		return
 	}
 }
@@ -104,12 +148,12 @@ function addClickListenerToCells(gameBoard) {
 	// Recorremos las celdas
 	for (var i = 0; i < 64; i++) {
 		var cell = cells[i];
-		// Asignamos el evento de click a cada celda
+		// Asignamos el evento de click izquierdo a cada celda
 		cell.addEventListener('click', function (e) {
 			// Pasamos como parametro el evento y el tablero en JSON
 			leftClick(e, gameBoard);
 		});
-
+		// Asignamos el evento de click derecho a cada celda
 		cell.addEventListener('contextmenu', function (e) {
 			e.preventDefault();
 			// Pasamos como parametro el evento y el tablero en JSON
