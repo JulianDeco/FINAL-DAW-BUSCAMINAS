@@ -69,7 +69,7 @@ function timeHandler() {
 
 	timer = formatTwoDigits(minutes) + ':' + formatTwoDigits(seconds);
 	timerHtml.textContent = timer;
-	if (seconds === 60) {
+	if (seconds == 59) {
 		minutes += 1;
 		seconds = 0;
 		return
