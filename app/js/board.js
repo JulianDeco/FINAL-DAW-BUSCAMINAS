@@ -47,7 +47,7 @@ function randomlyAssignMines(gameBoard, minesCount, boardSize) {
 	return gameBoard;
 }
 // Funcion que maneja el click y eventos segun los estados de la celda
-function addFunctionToCells(e, gameBoard) {
+function leftClick(e, gameBoard) {
 	// Buscamos el elemento con clase cell-container más cercano para extraer row y column
 	var container = e.target.closest('.cell-container');
 	var row = container.dataset.row;
@@ -57,15 +57,34 @@ function addFunctionToCells(e, gameBoard) {
 
 	if (gameBoardCell.mined === true) {
 		// Logica para perder en el juego
+		return 
 	}
 
-	if (gameBoardCell.flagged) {
-		// Logica de celda con bandera
-	}
-
-	if (gameBoardCell.opened === false) {
+	if (gameBoardCell.opened === false && gameBoardCell.flagged === false) {
 		// Cambiamos el estado de la celda
 		gameBoardCell.opened = true;
+	}
+}
+
+function rightClick(e, gameBoard){
+	var container = e.target.closest('.cell-container');
+	var row = container.dataset.row;
+	var col = container.dataset.col;
+
+	var gameBoardCell = gameBoard[row][col];
+
+	if (gameBoardCell.flagged === false && gameBoardCell.opened === false) {
+		// Logica de celda sin bandera
+		e.target.src = './app/img/flag.png'
+		gameBoardCell.flagged = true
+		return
+	}
+
+	if (gameBoardCell.flagged === true && gameBoardCell.opened === false) {
+		// Logica de celda con bandera
+		e.target.src = './app/img/tile.png'
+		gameBoardCell.flagged = false
+		return
 	}
 }
 
@@ -79,8 +98,14 @@ function addClickListenerToCells(gameBoard) {
 		// Asignamos el evento de click a cada celda
 		cell.addEventListener('click', function(e) {
 			// Pasamos como parametro el evento y el tablero en JSON
-			addFunctionToCells(e, gameBoard);
+			leftClick(e, gameBoard);
 		});
+
+		cell.addEventListener('contextmenu', function(e) {
+			e.preventDefault();
+			// Pasamos como parametro el evento y el tablero en JSON
+			rightClick(e, gameBoard);
+		})
 	}
 }
 
