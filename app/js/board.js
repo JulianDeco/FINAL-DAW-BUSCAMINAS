@@ -55,6 +55,10 @@ function leftClick(e, gameBoard) {
 
 	var gameBoardCell = gameBoard[row][col];
 
+	if (gameBoardCell.flagged === true){
+		return
+	}
+
 	if (gameBoardCell.mined === true) {
 		// Logica para perder en el juego
 		return
@@ -74,14 +78,18 @@ function rightClick(e, gameBoard) {
 
 	var gameBoardCell = gameBoard[row][col];
 
-	if (gameBoardCell.flagged === false && gameBoardCell.opened === false) {
+	if (gameBoardCell.opened === true) {
+		return
+	}
+
+	if (gameBoardCell.flagged === false) {
 		// Logica de celda sin bandera
 		e.target.src = './app/img/flag.png'
 		gameBoardCell.flagged = true;
 		return
 	}
 
-	if (gameBoardCell.flagged === true && gameBoardCell.opened === false) {
+	if (gameBoardCell.flagged === true) {
 		// Logica de celda con bandera
 		e.target.src = './app/img/tile.png'
 		gameBoardCell.flagged = false;
