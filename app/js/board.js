@@ -63,6 +63,7 @@ function leftClick(e, gameBoard) {
 	if (gameBoardCell.opened === false && gameBoardCell.flagged === false) {
 		// Cambiamos el estado de la celda
 		gameBoardCell.opened = true;
+		e.target.src = './app/img/opened_tile.png'
 	}
 }
 
