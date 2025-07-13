@@ -7,4 +7,3 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 addClickListenerToCells(gameBoard);
-console.log(gameBoard);

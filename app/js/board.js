@@ -107,10 +107,7 @@ function leftClick(e, gameBoard) {
 		gameBoard[row][col].opened === false &&
 		gameBoard[row][col].flagged === false
 	) {
-		// Cambiamos el estado de la celda
-		console.log('hola');
-		gameBoard[row][col].opened = true;
-		e.target.src = './app/img/opened_tile.png';
+		revealCell(gameBoard, row, col);
 	}
 }
 
@@ -191,9 +188,9 @@ function countAdjacentMines(gameBoard, boardSize) {
 }
 
 function countMinesAroundCell(gameBoard, boardSize, row, col) {
-	var count = 0;
+	var countMines = 0;
 
-	// Verificar las 8 celdas de alrededor
+	// Verifica las 8 celdas alrededor exceptuando las que esta fuera del tablero
 	for (
 		var r = Math.max(0, row - 1);
 		r <= Math.min(boardSize - 1, row + 1);
@@ -204,14 +201,66 @@ function countMinesAroundCell(gameBoard, boardSize, row, col) {
 			c <= Math.min(boardSize - 1, col + 1);
 			c++
 		) {
-			// No contar la celda actual
+			// Evita la celda actual
 			if (r === row && c === col) continue;
 
 			if (gameBoard[r][c].mined) {
-				count++;
+				countMines++;
 			}
 		}
 	}
+	return countMines;
+}
+function revealCell(gameBoard, row, col) {
+	if (row < 0 || row >= boardSize || col < 0 || col >= boardSize) {
+		return;
+	}
+	var shouldContinue = updateCellImage(gameBoard, row, col);
+	if (!shouldContinue) {
+		return; // Detener recursividad si tiene minas vecinas
+	}
+	// Expansión recursiva en todas las direcciones (8 celdas alrededor)
+	for (var r = row - 1; r <= row + 1; r++) {
+		for (var c = col - 1; c <= col + 1; c++) {
+			// No procesar la celda actual otra vez
+			if (r === row && c === col) continue;
 
-	return count;
+			revealCell(gameBoard, r, c); // Llamada recursiva
+		}
+	}
+}
+
+function updateCellImage(gameBoard, row, col) {
+	var boardCell = gameBoard[row][col];
+	var cellElement = document.querySelector(
+		'.cell-container[data-row="' +
+			boardCell.row +
+			'"][data-col="' +
+			boardCell.column +
+			'"]'
+	);
+	var img = cellElement.querySelector('img');
+
+	if (boardCell.opened) return false;
+	gameBoard[row][col].opened = true;
+
+	if (boardCell.neighborMineCount > 0) {
+		const numberImgMap = {
+			1: './app/img/number_one.png',
+			2: './app/img/number_two.png',
+			3: './app/img/number_three.png',
+			4: './app/img/number_four.png',
+			5: './app/img/number_five.png',
+			6: './app/img/number_six.png',
+			7: './app/img/number_seven.png',
+			8: './app/img/number_eight.png',
+		};
+		img.src = numberImgMap[boardCell.neighborMineCount];
+		return false;
+	}
+	// Si no hay minas vecinas
+	else if (!boardCell.mined) {
+		img.src = './app/img/opened_tile.png';
+		return true;
+	}
 }

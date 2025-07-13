@@ -13,3 +13,4 @@ var gameStarted = false;
 var timeout;
 var minesRemaining;
 var timeInterval;
+var neighbors = [];
