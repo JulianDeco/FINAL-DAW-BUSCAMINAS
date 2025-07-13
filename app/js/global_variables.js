@@ -12,3 +12,4 @@ var minutes = 0;
 var gameStarted = false;
 var timeout;
 var minesRemaining;
+var timeInterval;

@@ -16,6 +16,7 @@ function createBoard(boardSize, minesCount) {
 	}
 
 	gameBoard = randomlyAssignMines(gameBoard, minesCount, boardSize);
+	gameBoard = countAdjacentMines(gameBoard, boardSize);
 	return gameBoard;
 }
 //Funcion que crea el objeto celda
@@ -44,8 +45,9 @@ function randomlyAssignMines(gameBoard, minesCount, boardSize) {
 			minesPlaced++;
 		}
 	}
+
 	bomb = minesPlaced;
-	flags = bomb
+	flags = bomb;
 	return gameBoard;
 }
 
@@ -72,7 +74,7 @@ function timeHandler() {
 	if (seconds == 59) {
 		minutes += 1;
 		seconds = 0;
-		return
+		return;
 	}
 	seconds += 1;
 }
@@ -84,26 +86,30 @@ function leftClick(e, gameBoard) {
 	var row = container.dataset.row;
 	var col = container.dataset.col;
 
-	var gameBoardCell = gameBoard[row][col];
-
 	// Comprobar si el juego ya inicio
 	if (gameStarted === false) {
 		gameStarted = true;
-		setInterval(timeHandler, 1000);
+		timeInterval = setInterval(timeHandler, 1000);
 	}
 
-	if (gameBoardCell.flagged === true) {
-		return
+	if (gameBoard[row][col].flagged === true) {
+		return;
 	}
 
-	if (gameBoardCell.mined === true) {
+	if (gameBoard[row][col].mined === true) {
 		// Logica para perder en el juego
-		return
+		console.log('perdiste');
+		clearInterval(timeInterval);
+		return;
 	}
 
-	if (gameBoardCell.opened === false && gameBoardCell.flagged === false) {
+	if (
+		gameBoard[row][col].opened === false &&
+		gameBoard[row][col].flagged === false
+	) {
 		// Cambiamos el estado de la celda
-		gameBoardCell.opened = true;
+		console.log('hola');
+		gameBoard[row][col].opened = true;
 		e.target.src = './app/img/opened_tile.png';
 	}
 }
@@ -122,7 +128,7 @@ function rightClick(e, gameBoard) {
 	}
 
 	if (gameBoardCell.opened === true) {
-		return
+		return;
 	}
 
 	if (gameBoardCell.flagged === false && flags > 0) {
@@ -132,7 +138,7 @@ function rightClick(e, gameBoard) {
 		// Se resta una flag
 		flags = flags - 1;
 		flagHandlerCountHtml();
-		return
+		return;
 	}
 
 	if (gameBoardCell.flagged === true) {
@@ -142,7 +148,7 @@ function rightClick(e, gameBoard) {
 		// Se suma una flag
 		flags = flags + 1;
 		flagHandlerCountHtml();
-		return
+		return;
 	}
 }
 
@@ -155,15 +161,57 @@ function addClickListenerToCells(gameBoard) {
 		var cell = cells[i];
 		// Asignamos el evento de click izquierdo a cada celda
 		cell.addEventListener('click', function (e) {
-			// Pasamos como parametro el evento y el tablero en JSON
+			// Pasamos como parametro el evento y el tablero
 			leftClick(e, gameBoard);
 		});
 		// Asignamos el evento de click derecho a cada celda
 		cell.addEventListener('contextmenu', function (e) {
 			e.preventDefault();
-			// Pasamos como parametro el evento y el tablero en JSON
+			// Pasamos como parametro el evento y el tablero
 			rightClick(e, gameBoard);
-		})
+		});
 	}
 }
 
+function countAdjacentMines(gameBoard, boardSize) {
+	// Calcula minas adyacentes para cada celda
+	for (var row = 0; row < boardSize; row++) {
+		for (var col = 0; col < boardSize; col++) {
+			if (!gameBoard[row][col].mined) {
+				gameBoard[row][col].neighborMineCount = countMinesAroundCell(
+					gameBoard,
+					boardSize,
+					row,
+					col
+				);
+			}
+		}
+	}
+	return gameBoard;
+}
+
+function countMinesAroundCell(gameBoard, boardSize, row, col) {
+	var count = 0;
+
+	// Verificar las 8 celdas de alrededor
+	for (
+		var r = Math.max(0, row - 1);
+		r <= Math.min(boardSize - 1, row + 1);
+		r++
+	) {
+		for (
+			var c = Math.max(0, col - 1);
+			c <= Math.min(boardSize - 1, col + 1);
+			c++
+		) {
+			// No contar la celda actual
+			if (r === row && c === col) continue;
+
+			if (gameBoard[r][c].mined) {
+				count++;
+			}
+		}
+	}
+
+	return count;
+}
