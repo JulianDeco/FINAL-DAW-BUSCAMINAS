@@ -242,6 +242,7 @@ function updateCellImage(gameBoard, row, col) {
 	var img = cellElement.querySelector('img');
 
 	if (boardCell.opened) return false;
+	if (boardCell.mined) return false;
 	gameBoard[row][col].opened = true;
 
 	if (boardCell.neighborMineCount > 0) {
