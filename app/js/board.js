@@ -182,6 +182,7 @@ function addEventListenerToSpaceKey() {
 			//Reiniciamos timer
 			minutes = 0;
 			seconds = 0;
+			timeHandler();
 			gameBoard = createBoard(boardSize, minesCount);
 		};
 	});
@@ -197,6 +198,7 @@ function addClickListenerToButtonFace() {
 		//Reiniciamos timer
 		minutes = 0;
 		seconds = 0;
+		timeHandler();
 		gameBoard = createBoard(boardSize, minesCount);
 	});
 }
@@ -312,6 +314,7 @@ function gameLose(gameBoard) {
 	//Reiniciamos timer
 	minutes = 0;
 	seconds = 0;
+	timeHandler();
 }
 //Recorre el tablero y descubre todas las minas
 function revealAllMines(gameBoard) {
