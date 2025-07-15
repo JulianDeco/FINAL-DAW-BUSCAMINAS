@@ -3,7 +3,7 @@
 var boardSize = 8;
 var minesCount = 10;
 var gameBoard = [];
-var flags;
+var flags = 0;
 var mines;
 var bomb;
 var timer = '00:00';

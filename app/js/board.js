@@ -92,9 +92,7 @@ function leftClick(e, gameBoard) {
 		timeInterval = setInterval(timeHandler, 1000);
 	}
 
-	if (gameBoard[row][col].flagged === true) {
-		return;
-	}
+	if (gameBoard[row][col].flagged === true) return;
 
 	if (
 		gameBoard[row][col].opened === false &&
@@ -118,11 +116,12 @@ function rightClick(e, gameBoard) {
 		setInterval(timeHandler, 1000);
 	}
 
-	if (gameBoardCell.opened === true) {
-		return;
-	}
+	if (gameOver === true) return;
 
-	if (gameBoardCell.flagged === false && flags > 0) {
+	if (gameBoardCell.opened === true) return;
+
+
+	if (gameBoardCell.flagged === false) {
 		// Logica de celda sin bandera
 		e.target.src = './app/img/flag.png';
 		gameBoardCell.flagged = true;
