@@ -164,6 +164,13 @@ function addClickListenerToCells(gameBoard) {
 	}
 }
 
+function addClickListenerToButtonFace() {
+	var faceResetButton = document.querySelector('.start-reset-btn');
+	faceResetButton.addEventListener('click', function (e) {
+		revealResetFace(false);
+	});
+}
+
 function countAdjacentMines(gameBoard, boardSize) {
 	// Calcula minas adyacentes para cada celda
 	for (var row = 0; row < boardSize; row++) {
@@ -239,9 +246,7 @@ function updateCellImage(gameBoard, row, col, originalClick) {
 	if (!boardCell.opened) {
 		gameBoard[row][col].opened = true;
 		if (boardCell.mined && originalClick) {
-			clearInterval(timeInterval);
-			revealAllMines(gameBoard);
-			gameOver = true;
+			gameLose(gameBoard);
 			return false;
 		} else if (boardCell.neighborMineCount > 0) {
 			const numberImgMap = {
@@ -264,6 +269,14 @@ function updateCellImage(gameBoard, row, col, originalClick) {
 		return false;
 	}
 }
+function gameLose(gameBoard) {
+	//Frena el contador
+	clearInterval(timeInterval);
+	//Llama a la funcion para revelear el resto de minas en el tablero
+	revealAllMines(gameBoard);
+	//Cambia la imagen del boton de reset
+	revealResetFace(true);
+}
 //Recorre el tablero y descubre todas las minas
 function revealAllMines(gameBoard) {
 	for (let row = 0; row < boardSize; row++) {
@@ -282,5 +295,16 @@ function revealAllMines(gameBoard) {
 				boardCell.opened = true;
 			}
 		}
+	}
+}
+function revealResetFace(smileyFace) {
+	var faceReset = document.querySelector('.game-reset');
+	var faceImg = faceReset.querySelector('img');
+	if (smileyFace) {
+		gameOver = true;
+		faceImg.src = './app/img/sad-face.png';
+	} else {
+		gameOver = false;
+		faceImg.src = './app/img/smiley-face.png';
 	}
 }

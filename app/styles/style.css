@@ -41,3 +41,10 @@ body {
 	height: 2rem;
 	object-fit: contain;
 }
+.game-reset .face-img {
+	width: 2rem;
+	height: 2rem;
+}
+.game-reset .start-reset-btn:hover {
+	cursor: pointer;
+}

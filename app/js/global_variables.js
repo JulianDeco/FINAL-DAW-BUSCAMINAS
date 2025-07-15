@@ -15,3 +15,4 @@ var minesRemaining;
 var timeInterval;
 var neighbors = [];
 var gameOver = false;
+var smileyFace;
