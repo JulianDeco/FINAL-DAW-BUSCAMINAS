@@ -168,6 +168,8 @@ function addClickListenerToButtonFace() {
 	var faceResetButton = document.querySelector('.start-reset-btn');
 	faceResetButton.addEventListener('click', function (e) {
 		revealResetFace(false);
+		resetBoard();
+		gameBoard = createBoard(boardSize, minesCount);
 	});
 }
 
@@ -229,6 +231,14 @@ function revealCell(gameBoard, row, col, originalClick) {
 
 			revealCell(gameBoard, r, c, false); // Llamada recursiva
 		}
+	}
+}
+
+function resetBoard() {
+	var cells = document.querySelectorAll('.cell-img')
+	for (var i = 0; i < cells.length ; i++){
+		console.log(cells[i])
+		cells[i].src = './app/img/tile.png'
 	}
 }
 
