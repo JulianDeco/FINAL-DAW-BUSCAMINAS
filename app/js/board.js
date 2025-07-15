@@ -96,18 +96,12 @@ function leftClick(e, gameBoard) {
 		return;
 	}
 
-	if (gameBoard[row][col].mined === true) {
-		// Logica para perder en el juego
-		console.log('perdiste');
-		clearInterval(timeInterval);
-		return;
-	}
-
 	if (
 		gameBoard[row][col].opened === false &&
 		gameBoard[row][col].flagged === false
 	) {
-		revealCell(gameBoard, row, col);
+		var originalClick = true;
+		revealCell(gameBoard, row, col, originalClick);
 	}
 }
 
@@ -211,11 +205,12 @@ function countMinesAroundCell(gameBoard, boardSize, row, col) {
 	}
 	return countMines;
 }
-function revealCell(gameBoard, row, col) {
+function revealCell(gameBoard, row, col, originalClick) {
+	if (gameOver) return;
 	if (row < 0 || row >= boardSize || col < 0 || col >= boardSize) {
 		return;
 	}
-	var shouldContinue = updateCellImage(gameBoard, row, col);
+	var shouldContinue = updateCellImage(gameBoard, row, col, originalClick);
 	if (!shouldContinue) {
 		return; // Detener recursividad si tiene minas vecinas
 	}
@@ -225,12 +220,12 @@ function revealCell(gameBoard, row, col) {
 			// No procesar la celda actual otra vez
 			if (r === row && c === col) continue;
 
-			revealCell(gameBoard, r, c); // Llamada recursiva
+			revealCell(gameBoard, r, c, false); // Llamada recursiva
 		}
 	}
 }
 
-function updateCellImage(gameBoard, row, col) {
+function updateCellImage(gameBoard, row, col, originalClick) {
 	var boardCell = gameBoard[row][col];
 	var cellElement = document.querySelector(
 		'.cell-container[data-row="' +
@@ -240,28 +235,52 @@ function updateCellImage(gameBoard, row, col) {
 			'"]'
 	);
 	var img = cellElement.querySelector('img');
-
-	if (boardCell.opened) return false;
-	if (boardCell.mined) return false;
-	gameBoard[row][col].opened = true;
-
-	if (boardCell.neighborMineCount > 0) {
-		const numberImgMap = {
-			1: './app/img/number_one.png',
-			2: './app/img/number_two.png',
-			3: './app/img/number_three.png',
-			4: './app/img/number_four.png',
-			5: './app/img/number_five.png',
-			6: './app/img/number_six.png',
-			7: './app/img/number_seven.png',
-			8: './app/img/number_eight.png',
-		};
-		img.src = numberImgMap[boardCell.neighborMineCount];
+	//Es por la recusion que se vuelve a comprobar
+	if (!boardCell.opened) {
+		gameBoard[row][col].opened = true;
+		if (boardCell.mined && originalClick) {
+			clearInterval(timeInterval);
+			revealAllMines(gameBoard);
+			gameOver = true;
+			return false;
+		} else if (boardCell.neighborMineCount > 0) {
+			const numberImgMap = {
+				1: './app/img/number_one.png',
+				2: './app/img/number_two.png',
+				3: './app/img/number_three.png',
+				4: './app/img/number_four.png',
+				5: './app/img/number_five.png',
+				6: './app/img/number_six.png',
+				7: './app/img/number_seven.png',
+				8: './app/img/number_eight.png',
+			};
+			img.src = numberImgMap[boardCell.neighborMineCount];
+			return false;
+		} else {
+			img.src = './app/img/opened_tile.png';
+			return true;
+		}
+	} else {
 		return false;
 	}
-	// Si no hay minas vecinas
-	else if (!boardCell.mined) {
-		img.src = './app/img/opened_tile.png';
-		return true;
+}
+//Recorre el tablero y descubre todas las minas
+function revealAllMines(gameBoard) {
+	for (let row = 0; row < boardSize; row++) {
+		for (let col = 0; col < boardSize; col++) {
+			var boardCell = gameBoard[row][col];
+			if (boardCell.mined) {
+				var cellElement = document.querySelector(
+					'.cell-container[data-row="' +
+						boardCell.row +
+						'"][data-col="' +
+						boardCell.column +
+						'"]'
+				);
+				var img = cellElement.querySelector('img');
+				img.src = './app/img/bomb.png';
+				boardCell.opened = true;
+			}
+		}
 	}
 }
