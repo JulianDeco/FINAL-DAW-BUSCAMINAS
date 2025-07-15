@@ -164,6 +164,13 @@ function addClickListenerToCells(gameBoard) {
 	}
 }
 
+function resetBoard() {
+	var cells = document.querySelectorAll('.cell-img');
+	for (var i = 0; i < cells.length ; i++){
+		cells[i].src = './app/img/tile.png';
+	};
+}
+
 function addClickListenerToButtonFace() {
 	var faceResetButton = document.querySelector('.start-reset-btn');
 	faceResetButton.addEventListener('click', function (e) {
@@ -234,13 +241,6 @@ function revealCell(gameBoard, row, col, originalClick) {
 	}
 }
 
-function resetBoard() {
-	var cells = document.querySelectorAll('.cell-img')
-	for (var i = 0; i < cells.length ; i++){
-		console.log(cells[i])
-		cells[i].src = './app/img/tile.png'
-	}
-}
 
 function updateCellImage(gameBoard, row, col, originalClick) {
 	var boardCell = gameBoard[row][col];
