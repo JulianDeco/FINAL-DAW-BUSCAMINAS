@@ -8,3 +8,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
 addClickListenerToCells(gameBoard);
 addClickListenerToButtonFace();
+addEventListenerToSpaceKey();

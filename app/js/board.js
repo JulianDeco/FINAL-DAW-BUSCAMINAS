@@ -171,6 +171,17 @@ function resetBoard() {
 	};
 }
 
+function addEventListenerToSpaceKey() {
+	document.addEventListener('keydown', function (e) {
+		if (e.keyCode === 32) {
+			e.preventDefault();
+			revealResetFace(false);
+			resetBoard();
+			gameBoard = createBoard(boardSize, minesCount);
+		};
+	});
+}
+
 function addClickListenerToButtonFace() {
 	var faceResetButton = document.querySelector('.start-reset-btn');
 	faceResetButton.addEventListener('click', function (e) {
