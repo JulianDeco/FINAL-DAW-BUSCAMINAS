@@ -86,6 +86,7 @@ function leftClick(e, gameBoard) {
 	var row = container.dataset.row;
 	var col = container.dataset.col;
 
+	console.log(gameStarted)
 	// Comprobar si el juego ya inicio
 	if (gameStarted === false) {
 		gameStarted = true;
@@ -176,6 +177,11 @@ function addEventListenerToSpaceKey() {
 			e.preventDefault();
 			revealResetFace(false);
 			resetBoard();
+			clearInterval(timeInterval);
+			gameStarted = false;
+			//Reiniciamos timer
+			minutes = 0;
+			seconds = 0;
 			gameBoard = createBoard(boardSize, minesCount);
 		};
 	});
@@ -186,6 +192,11 @@ function addClickListenerToButtonFace() {
 	faceResetButton.addEventListener('click', function (e) {
 		revealResetFace(false);
 		resetBoard();
+		clearInterval(timeInterval);
+		gameStarted = false;
+		//Reiniciamos timer
+		minutes = 0;
+		seconds = 0;
 		gameBoard = createBoard(boardSize, minesCount);
 	});
 }
@@ -296,6 +307,11 @@ function gameLose(gameBoard) {
 	revealAllMines(gameBoard);
 	//Cambia la imagen del boton de reset
 	revealResetFace(true);
+
+	gameStarted = false;
+	//Reiniciamos timer
+	minutes = 0;
+	seconds = 0;
 }
 //Recorre el tablero y descubre todas las minas
 function revealAllMines(gameBoard) {
