@@ -277,7 +277,6 @@ function updateCellImage(gameBoard, row, col, originalClick) {
 	var img = cellElement.querySelector('img');
 	//Es por la recusion que se vuelve a comprobar
 	if (!boardCell.opened) {
-		gameBoard[row][col].opened = true;
 		if (boardCell.mined && originalClick) {
 			gameLose(gameBoard);
 			return false;
@@ -293,9 +292,13 @@ function updateCellImage(gameBoard, row, col, originalClick) {
 				8: './app/img/number_eight.png',
 			};
 			img.src = numberImgMap[boardCell.neighborMineCount];
+			gameBoard[row][col].opened = true;
 			return false;
-		} else {
+		} 
+		else if (boardCell.mined === true)return false; 
+		else {
 			img.src = './app/img/opened_tile.png';
+			gameBoard[row][col].opened = true;
 			return true;
 		}
 	} else {
