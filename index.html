@@ -1,14 +1,647 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Minesweeper</title>
+		<link rel="icon" type="image/png" href="./app/img/mine-menu-icon.png" />
+		<link rel="stylesheet" href="./app/styles/normalize.css" />
+		<link rel="stylesheet" href="./app/styles/style.css" />
+		<script src="./app/js/global_variables.js" defer></script>
+		<script src="./app/js/board.js" defer></script>
+		<script src="./app/js/main.js" defer></script>
+	</head>
+	<body>
+		<header>
+			<h3 class="title">Minesweeper</h3>
+		</header>
+		<main>
+			<div class="game-container">
+				<div class="game-header">
+					<div class="game-stats">
+						<div class="stat-label">
+							<div id="stat-label-mines">Minas</div>
+							<div id="stat-label-flags">Banderas</div>
+							<div id="stat-label-time">Tiempo</div>
+						</div>
+						<div class="stat-value">
+							<div id="stat-value-remaining">10</div>
+							<div id="stat-value-flags">10</div>
+							<div id="stat-value-time">00:00</div>
+						</div>
+					</div>
+					<div class="game-reset">
+						<button class="start-reset-btn" id="reset-btn">
+							<img
+								src="./app/img/smiley-face.png"
+								alt="Face"
+								class="face-img"
+							/>
+						</button>
+					</div>
+				</div>
+				<div class="game-board">
+					<!-- Fila 1 -->
+					<div class="cell-container" data-row="0" data-col="0">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="0" data-col="1">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="0" data-col="2">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="0" data-col="3">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="0" data-col="4">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="0" data-col="5">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="0" data-col="6">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="0" data-col="7">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
 
-    <link rel="stylesheet" href="./styles/normalize.css">
-    <link rel="stylesheet" href="./styles/style.css">
-</head>
-<body>
-    <script src="./js/main.js"></script>
-</body>
+					<!-- Fila 2 -->
+					<div class="cell-container" data-row="1" data-col="0">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="1" data-col="1">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="1" data-col="2">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="1" data-col="3">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="1" data-col="4">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="1" data-col="5">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="1" data-col="6">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="1" data-col="7">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+
+					<!-- Fila 3 -->
+					<div class="cell-container" data-row="2" data-col="0">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="2" data-col="1">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="2" data-col="2">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="2" data-col="3">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="2" data-col="4">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="2" data-col="5">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="2" data-col="6">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="2" data-col="7">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+
+					<!-- Fila 4 -->
+					<div class="cell-container" data-row="3" data-col="0">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="3" data-col="1">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="3" data-col="2">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="3" data-col="3">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="3" data-col="4">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="3" data-col="5">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="3" data-col="6">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="3" data-col="7">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+
+					<!-- Fila 5 -->
+					<div class="cell-container" data-row="4" data-col="0">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="4" data-col="1">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="4" data-col="2">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="4" data-col="3">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="4" data-col="4">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="4" data-col="5">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="4" data-col="6">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="4" data-col="7">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+
+					<!-- Fila 6 -->
+					<div class="cell-container" data-row="5" data-col="0">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="5" data-col="1">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="5" data-col="2">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="5" data-col="3">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="5" data-col="4">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="5" data-col="5">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="5" data-col="6">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="5" data-col="7">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+
+					<!-- Fila 7 -->
+					<div class="cell-container" data-row="6" data-col="0">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="6" data-col="1">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="6" data-col="2">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="6" data-col="3">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="6" data-col="4">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="6" data-col="5">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="6" data-col="6">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="6" data-col="7">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+
+					<!-- Fila 8 -->
+					<div class="cell-container" data-row="7" data-col="0">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="7" data-col="1">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="7" data-col="2">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="7" data-col="3">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="7" data-col="4">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="7" data-col="5">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="7" data-col="6">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+					<div class="cell-container" data-row="7" data-col="7">
+						<button class="cell-btn">
+							<img
+								src="./app/img/tile.png"
+								alt="Celda"
+								class="cell-img"
+							/>
+						</button>
+					</div>
+				</div>
+			</div>
+		</main>
+		<section class="footer-board">
+			<div class="footer-board-difficulty">
+				<div class="difficulty-selector"></div>
+			</div>
+		</section>
+		<footer>
+			<p>Desarrollo y Arquitecturas Web 2025 - Proyecto Final</p>
+		</footer>
+	</body>
 </html>
