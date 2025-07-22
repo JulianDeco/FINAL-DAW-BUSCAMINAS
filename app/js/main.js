@@ -1,14 +1,24 @@
 'use strict';
 
-gameBoard = createBoard(boardSize, minesCount);
-
 document.addEventListener('DOMContentLoaded', function () {
-	var boardElement = document.querySelector('.game-board');
-	renderBoard(boardSize);
-	addClickListenerToCells(gameBoard);
-	
+	initGame();
 });
 
-addClickListenerToButtonFace();
-addEventListenerToSpaceKey();
+// Selector de dificultad
+document
+	.getElementById('difficulty-select')
+	.addEventListener('change', function (e) {
+		var difficulty = e.target.value;
+		setDifficulty(difficulty);
+		initGame();
+		resetBoard();
+	});
 
+function initGame() {
+	gameVar.gameOver = false;
+	gameBoard = createBoard(gameVar.boardSize, gameVar.minesCount);
+	renderBoard(gameVar.boardSize);
+	addClickListenerToCells(gameBoard);
+	addClickListenerToButtonFace();
+	addEventListenerToSpaceKey();
+}
