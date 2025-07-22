@@ -1,4 +1,33 @@
-'use strict';
+"use strict";
+
+function renderBoard(boardSize) {
+	var gameBoardContainer = document.querySelector(".game-board");
+	while (gameBoardContainer.firstChild) {
+		gameBoardContainer.removeChild(gameBoardContainer.firstChild);
+	}
+
+	for (var row = 0; row < boardSize; row++) {
+		for (var col = 0; col < boardSize; col++) {
+			var container = document.createElement("div");
+			container.className = "cell-container";
+			container.setAttribute("data-row", row);
+			container.setAttribute("data-col", col);
+
+			var button = document.createElement("button");
+			button.className = "cell-btn";
+
+			var img = document.createElement("img");
+			img.src = "./app/img/tile.png";
+			img.alt = "Celda";
+			img.className = "cell-img";
+
+			button.appendChild(img);
+			container.appendChild(button);
+			gameBoardContainer.appendChild(container);
+		}
+	}
+}
+
 //Funcion que se encarga de crear el tablero
 function createBoard(boardSize, minesCount) {
 	for (var row = 0; row < boardSize; row++) {
@@ -52,7 +81,7 @@ function randomlyAssignMines(gameBoard, minesCount, boardSize) {
 }
 
 function flagHandlerCountHtml() {
-	var flag_html = document.getElementById('stat-value-flags');
+	var flag_html = document.getElementById("stat-value-flags");
 	flag_html.textContent = flags;
 }
 
@@ -60,16 +89,16 @@ function flagHandlerCountHtml() {
 // Ejemplo minuto 5 transformado a 05
 function formatTwoDigits(number) {
 	if (number < 10) {
-		return '0' + number;
+		return "0" + number;
 	}
 	return number;
 }
 
 // Handler del timer que se ejecuta una vez presionada alguna celda tanto con click izquierdo como derecho
 function timeHandler() {
-	var timerHtml = document.getElementById('stat-value-time');
+	var timerHtml = document.getElementById("stat-value-time");
 
-	timer = formatTwoDigits(minutes) + ':' + formatTwoDigits(seconds);
+	timer = formatTwoDigits(minutes) + ":" + formatTwoDigits(seconds);
 	timerHtml.textContent = timer;
 	if (seconds == 59) {
 		minutes += 1;
@@ -82,16 +111,20 @@ function timeHandler() {
 // Funcion que maneja el click y eventos segun los estados de la celda
 function leftClick(e, gameBoard) {
 	// Buscamos el elemento con clase cell-container más cercano para extraer row y column
-	var container = e.target.closest('.cell-container');
+	var container = e.target.closest(".cell-container");
 	var row = container.dataset.row;
 	var col = container.dataset.col;
 
-	console.log(gameStarted)
+	console.log(gameStarted);
 	// Comprobar si el juego ya inicio
-	if (gameStarted === false) {
+	if (gameStarted === false && gameOver === false) {
 		gameStarted = true;
+		if (timeInterval) {
+			clearInterval(timeInterval);
+		}
 		timeInterval = setInterval(timeHandler, 1000);
 	}
+
 
 	if (gameBoard[row][col].flagged === true) return;
 
@@ -105,26 +138,29 @@ function leftClick(e, gameBoard) {
 }
 
 function rightClick(e, gameBoard) {
-	var container = e.target.closest('.cell-container');
+	var container = e.target.closest(".cell-container");
 	var row = container.dataset.row;
 	var col = container.dataset.col;
 
 	var gameBoardCell = gameBoard[row][col];
 
 	// Comprobar si el juego ya inicio
-	if (gameStarted === false) {
+	if (gameStarted === false && gameOver === false) {
 		gameStarted = true;
-		setInterval(timeHandler, 1000);
+		if (timeInterval) {
+			clearInterval(timeInterval);
+		}
+		timeInterval = setInterval(timeHandler, 1000);
 	}
+
 
 	if (gameOver === true) return;
 
 	if (gameBoardCell.opened === true) return;
 
-
 	if (gameBoardCell.flagged === false) {
 		// Logica de celda sin bandera
-		e.target.src = './app/img/flag.png';
+		e.target.src = "./app/img/flag.png";
 		gameBoardCell.flagged = true;
 		// Se resta una flag
 		flags = flags - 1;
@@ -134,7 +170,7 @@ function rightClick(e, gameBoard) {
 
 	if (gameBoardCell.flagged === true) {
 		// Logica de celda con bandera
-		e.target.src = './app/img/tile.png';
+		e.target.src = "./app/img/tile.png";
 		gameBoardCell.flagged = false;
 		// Se suma una flag
 		flags = flags + 1;
@@ -146,17 +182,17 @@ function rightClick(e, gameBoard) {
 // Funcion que asigna listeners de click a cada celda
 function addClickListenerToCells(gameBoard) {
 	// Recuperamos todas las celdas
-	var cells = document.getElementsByClassName('cell-container');
+	var cells = document.getElementsByClassName("cell-container");
 	// Recorremos las celdas
 	for (var i = 0; i < 64; i++) {
 		var cell = cells[i];
 		// Asignamos el evento de click izquierdo a cada celda
-		cell.addEventListener('click', function (e) {
+		cell.addEventListener("click", function (e) {
 			// Pasamos como parametro el evento y el tablero
 			leftClick(e, gameBoard);
 		});
 		// Asignamos el evento de click derecho a cada celda
-		cell.addEventListener('contextmenu', function (e) {
+		cell.addEventListener("contextmenu", function (e) {
 			e.preventDefault();
 			// Pasamos como parametro el evento y el tablero
 			rightClick(e, gameBoard);
@@ -165,16 +201,19 @@ function addClickListenerToCells(gameBoard) {
 }
 
 function resetBoard() {
-	var cells = document.querySelectorAll('.cell-img');
-	for (var i = 0; i < cells.length ; i++){
-		cells[i].src = './app/img/tile.png';
-	};
+	var cells = document.querySelectorAll(".cell-img");
+	for (var i = 0; i < cells.length; i++) {
+		cells[i].src = "./app/img/tile.png";
+	}
 }
 
 function addEventListenerToSpaceKey() {
-	document.addEventListener('keydown', function (e) {
+	document.addEventListener("keydown", function (e) {
 		if (e.keyCode === 32) {
 			e.preventDefault();
+			flags = minesCount;
+			flagHandlerCountHtml();
+			revealResetFace(false);
 			revealResetFace(false);
 			resetBoard();
 			clearInterval(timeInterval);
@@ -184,13 +223,15 @@ function addEventListenerToSpaceKey() {
 			seconds = 0;
 			timeHandler();
 			gameBoard = createBoard(boardSize, minesCount);
-		};
+		}
 	});
 }
 
 function addClickListenerToButtonFace() {
-	var faceResetButton = document.querySelector('.start-reset-btn');
-	faceResetButton.addEventListener('click', function (e) {
+	var faceResetButton = document.querySelector(".start-reset-btn");
+	faceResetButton.addEventListener("click", function (e) {
+		flags = minesCount;
+		flagHandlerCountHtml();
 		revealResetFace(false);
 		resetBoard();
 		clearInterval(timeInterval);
@@ -264,7 +305,6 @@ function revealCell(gameBoard, row, col, originalClick) {
 	}
 }
 
-
 function updateCellImage(gameBoard, row, col, originalClick) {
 	var boardCell = gameBoard[row][col];
 	var cellElement = document.querySelector(
@@ -274,30 +314,29 @@ function updateCellImage(gameBoard, row, col, originalClick) {
 			boardCell.column +
 			'"]'
 	);
-	var img = cellElement.querySelector('img');
+	var img = cellElement.querySelector("img");
 	//Es por la recusion que se vuelve a comprobar
 	if (!boardCell.opened) {
 		if (boardCell.mined && originalClick) {
 			gameLose(gameBoard);
 			return false;
 		} else if (boardCell.neighborMineCount > 0) {
-			const numberImgMap = {
-				1: './app/img/number_one.png',
-				2: './app/img/number_two.png',
-				3: './app/img/number_three.png',
-				4: './app/img/number_four.png',
-				5: './app/img/number_five.png',
-				6: './app/img/number_six.png',
-				7: './app/img/number_seven.png',
-				8: './app/img/number_eight.png',
+			var numberImgMap = {
+				1: "./app/img/number_one.png",
+				2: "./app/img/number_two.png",
+				3: "./app/img/number_three.png",
+				4: "./app/img/number_four.png",
+				5: "./app/img/number_five.png",
+				6: "./app/img/number_six.png",
+				7: "./app/img/number_seven.png",
+				8: "./app/img/number_eight.png",
 			};
 			img.src = numberImgMap[boardCell.neighborMineCount];
 			gameBoard[row][col].opened = true;
 			return false;
-		} 
-		else if (boardCell.mined === true)return false; 
+		} else if (boardCell.mined === true) return false;
 		else {
-			img.src = './app/img/opened_tile.png';
+			img.src = "./app/img/opened_tile.png";
 			gameBoard[row][col].opened = true;
 			return true;
 		}
@@ -332,21 +371,21 @@ function revealAllMines(gameBoard) {
 						boardCell.column +
 						'"]'
 				);
-				var img = cellElement.querySelector('img');
-				img.src = './app/img/bomb.png';
+				var img = cellElement.querySelector("img");
+				img.src = "./app/img/bomb.png";
 				boardCell.opened = true;
 			}
 		}
 	}
 }
 function revealResetFace(smileyFace) {
-	var faceReset = document.querySelector('.game-reset');
-	var faceImg = faceReset.querySelector('img');
+	var faceReset = document.querySelector(".game-reset");
+	var faceImg = faceReset.querySelector("img");
 	if (smileyFace) {
 		gameOver = true;
-		faceImg.src = './app/img/sad-face.png';
+		faceImg.src = "./app/img/sad-face.png";
 	} else {
 		gameOver = false;
-		faceImg.src = './app/img/smiley-face.png';
+		faceImg.src = "./app/img/smiley-face.png";
 	}
 }
