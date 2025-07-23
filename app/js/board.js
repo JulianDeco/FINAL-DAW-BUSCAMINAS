@@ -142,15 +142,15 @@ function rightClick(e, gameBoard) {
 	var gameBoardCell = gameBoard[row][col];
 
 	// Comprobar si el juego ya inicio
-	if (gameStarted === false && gameOver === false) {
-		gameStarted = true;
+	if (gameVar.gameStarted === false && gameVar.gameOver === false) {
+		gameVar.gameStarted = true;
 		if (timeInterval) {
 			clearInterval(timeInterval);
 		}
 		timeInterval = setInterval(timeHandler, 1000);
 	}
 
-	if (gameOver === true) return;
+	if (gameVar.gameOver === true) return;
 
 	if (gameBoardCell.opened === true) return;
 
@@ -277,9 +277,15 @@ function revealCell(gameBoard, row, col, originalClick) {
 	) {
 		return;
 	}
+
 	var shouldContinue = updateCellImage(gameBoard, row, col, originalClick);
+
+	if (!gameVar.gameOver) {
+		checkWin(gameBoard);
+	}
+
 	if (!shouldContinue) {
-		return; // Detener recursividad si tiene minas vecinas
+		return;
 	}
 	// Expansión recursiva en todas las direcciones (8 celdas alrededor)
 	for (var r = row - 1; r <= row + 1; r++) {
@@ -393,4 +399,22 @@ function setDifficulty(difficulty) {
 		default:
 			break;
 	}
+}
+
+function checkWin(gameBoard) {
+	for (var row = 0; row < gameVar.boardSize; row++) {
+		for (var col = 0; col < gameVar.boardSize; col++) {
+			var cell = gameBoard[row][col];
+			if (!cell.mined && !cell.opened) {
+				return;
+			}
+		}
+	}
+	gameWin();
+}
+
+function gameWin() {
+	gameVar.gameOver = true;
+	clearInterval(timeInterval);
+	console.log('Ganaste');
 }
