@@ -48,3 +48,7 @@ body {
 .game-reset .start-reset-btn:hover {
 	cursor: pointer;
 }
+.github-icon {
+	width: 2rem;
+	height: 2rem;
+}

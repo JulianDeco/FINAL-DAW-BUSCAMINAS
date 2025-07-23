@@ -211,7 +211,7 @@ function addEventListenerToSpaceKey() {
 		if (e.keyCode === 32) {
 			e.preventDefault();
 			flagHandlerCountHtml();
-			revealResetFace(false);
+			revealResetFace('Smiley');
 			resetBoard();
 			gameBoard = createBoard(gameVar.boardSize, gameVar.minesCount);
 		}
@@ -222,7 +222,7 @@ function addClickListenerToButtonFace() {
 	faceResetButton.addEventListener('click', function (e) {
 		gameVar.flags = gameVar.minesCount;
 		flagHandlerCountHtml();
-		revealResetFace(false);
+		revealResetFace('Smiley');
 		resetBoard();
 		gameBoard = createBoard(gameVar.boardSize, gameVar.minesCount);
 	});
@@ -268,21 +268,20 @@ function countMinesAroundCell(gameBoard, boardSize, row, col) {
 	return countMines;
 }
 function revealCell(gameBoard, row, col, originalClick) {
-	if (gameVar.gameOver) return;
-	if (
+	if (gameVar.gameOver) {
+		return;
+	} else if (
 		row < 0 ||
 		row >= gameVar.boardSize ||
 		col < 0 ||
 		col >= gameVar.boardSize
 	) {
 		return;
+	} else {
+		checkWin(gameBoard);
 	}
 
 	var shouldContinue = updateCellImage(gameBoard, row, col, originalClick);
-
-	if (!gameVar.gameOver) {
-		checkWin(gameBoard);
-	}
 
 	if (!shouldContinue) {
 		return;
@@ -342,7 +341,7 @@ function gameLose(gameBoard) {
 	//Llama a la funcion para revelear el resto de minas en el tablero
 	revealAllMines(gameBoard);
 	//Cambia la imagen del boton de reset
-	revealResetFace(true);
+	revealResetFace('Loose');
 
 	gameVar.gameStarted = false;
 	//Reiniciamos timer
@@ -373,12 +372,21 @@ function revealAllMines(gameBoard) {
 function revealResetFace(smileyFace) {
 	var faceReset = document.querySelector('.game-reset');
 	var faceImg = faceReset.querySelector('img');
-	if (smileyFace) {
-		gameVar.gameOver = true;
-		faceImg.src = './app/img/sad-face.png';
-	} else {
-		gameVar.gameOver = false;
-		faceImg.src = './app/img/smiley-face.png';
+	switch (smileyFace) {
+		case 'Loose':
+			gameVar.gameOver = true;
+			faceImg.src = './app/img/sad-face.png';
+			break;
+		case 'Smiley':
+			gameVar.gameOver = false;
+			faceImg.src = './app/img/smiley-face.png';
+			break;
+		case 'Win':
+			gameVar.gameOver = true;
+			faceImg.src = './app/img/cool-face.png';
+			break;
+		default:
+			break;
 	}
 }
 
@@ -387,14 +395,17 @@ function setDifficulty(difficulty) {
 		case 'easy':
 			gameVar.boardSize = 8;
 			gameVar.minesCount = 10;
+			adjustBoardSize(gameVar.boardSize);
 			break;
 		case 'medium':
 			gameVar.boardSize = 12;
 			gameVar.minesCount = 25;
+			adjustBoardSize(gameVar.boardSize);
 			break;
 		case 'hard':
 			gameVar.boardSize = 16;
 			gameVar.minesCount = 40;
+			adjustBoardSize(gameVar.boardSize);
 			break;
 		default:
 			break;
@@ -414,7 +425,13 @@ function checkWin(gameBoard) {
 }
 
 function gameWin() {
-	gameVar.gameOver = true;
 	clearInterval(timeInterval);
+	revealResetFace('Win');
 	console.log('Ganaste');
+}
+
+function adjustBoardSize(boardSize) {
+	var gameBoard = document.querySelector('.game-board');
+	var width = boardSize * 2.5;
+	gameBoard.style.maxWidth = `${width}rem`;
 }
