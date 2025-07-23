@@ -2,14 +2,36 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0"
+		/>
 		<title>Minesweeper</title>
-		<link rel="icon" type="image/png" href="./app/img/mine-menu-icon.png" />
-		<link rel="stylesheet" href="./app/styles/normalize.css" />
-		<link rel="stylesheet" href="./app/styles/style.css" />
-		<script src="./app/js/global_variables.js" defer></script>
-		<script src="./app/js/board.js" defer></script>
-		<script src="./app/js/main.js" defer></script>
+		<link
+			rel="icon"
+			type="image/png"
+			href="./app/img/mine-menu-icon.png"
+		/>
+		<link
+			rel="stylesheet"
+			href="./app/styles/normalize.css"
+		/>
+		<link
+			rel="stylesheet"
+			href="./app/styles/style.css"
+		/>
+		<script
+			src="./app/js/global_variables.js"
+			defer
+		></script>
+		<script
+			src="./app/js/board.js"
+			defer
+		></script>
+		<script
+			src="./app/js/main.js"
+			defer
+		></script>
 	</head>
 	<body>
 		<header>
@@ -44,7 +66,10 @@
 						</div>
 					</div>
 					<div class="game-reset">
-						<button class="start-reset-btn" id="reset-btn">
+						<button
+							class="start-reset-btn"
+							id="reset-btn"
+						>
 							<img
 								src="./app/img/smiley-face.png"
 								alt="Face"
@@ -55,7 +80,12 @@
 					<div class="difficulty-selector">
 						<label for="difficulty-select">Dificultad:</label>
 						<select id="difficulty-select">
-							<option value="easy" selected>Fácil</option>
+							<option
+								value="easy"
+								selected
+							>
+								Fácil
+							</option>
 							<option value="medium">Media</option>
 							<option value="hard">Difícil</option>
 						</select>
@@ -64,7 +94,10 @@
 				<div class="game-board"></div>
 			</div>
 		</main>
-		<div id="win-modal" class="modal hidden">
+		<div
+			id="win-modal"
+			class="modal hidden"
+		>
 			<div class="modal-content">
 				<h2>¡Ganaste!</h2>
 				<p>Felicitaciones, encontraste todas las minas.</p>

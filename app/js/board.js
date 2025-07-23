@@ -161,6 +161,7 @@ function rightClick(e, gameBoard) {
 		// Se resta una flag
 		gameVar.flags = gameVar.flags - 1;
 		flagHandlerCountHtml();
+		checkWin(gameBoard);
 		return;
 	}
 
@@ -228,9 +229,9 @@ function addClickListenerToButtonFace() {
 	});
 }
 
-function addClickListenerToModal(){
+function addClickListenerToModal() {
 	var closeBtn = document.getElementById('close-modal');
-		closeBtn.addEventListener('click', () => {
+	closeBtn.addEventListener('click', () => {
 		document.getElementById('win-modal').classList.add('hidden');
 	});
 }
@@ -285,7 +286,7 @@ function revealCell(gameBoard, row, col, originalClick) {
 		col >= gameVar.boardSize
 	) {
 		return;
-	} 
+	}
 
 	var shouldContinue = updateCellImage(gameBoard, row, col, originalClick);
 
@@ -441,8 +442,6 @@ function gameWin() {
 	revealResetFace('Win');
 	showWinModal();
 }
-
-
 
 function adjustBoardSize(boardSize) {
 	var gameBoard = document.querySelector('.game-board');
