@@ -80,7 +80,6 @@ function randomlyAssignMines(gameBoard, minesCount, boardSize) {
 	return gameBoard;
 }
 function flagHandlerCountHtml() {
-	gameVar.flags = gameVar.minesCount;
 	var flag_html = document.getElementById('stat-value-flags');
 	flag_html.textContent = gameVar.flags;
 }
@@ -131,7 +130,6 @@ function leftClick(e, gameBoard) {
 		gameBoard[row][col].flagged === false
 	) {
 		checkWin(gameBoard);
-		console.log(gameBoard)
 		var originalClick = true;
 		revealCell(gameBoard, row, col, originalClick);
 	}
@@ -315,7 +313,7 @@ function updateCellImage(gameBoard, row, col, originalClick) {
 	);
 	var img = cellElement.querySelector('img');
 	//Es por la recusion que se vuelve a comprobar
-	if (!boardCell.opened) {
+	if (!boardCell.opened && !boardCell.flagged) {
 		if (boardCell.mined && originalClick) {
 			gameLose(gameBoard);
 			return false;
@@ -425,7 +423,6 @@ function checkWin(gameBoard) {
 		for (var col = 0; col < gameVar.boardSize; col++) {
 			var cell = gameBoard[row][col];
 			if (!cell.mined && !cell.opened) {
-				console.log(`Falta abrir: (${cell.row}, ${cell.column})`);
 				return;
 			}
 		}
