@@ -46,6 +46,7 @@ function createBoard(boardSize, minesCount) {
 	gameBoard = randomlyAssignMines(gameBoard, minesCount, boardSize);
 	gameBoard = countAdjacentMines(gameBoard, boardSize);
 	flagHandlerCountHtml();
+	mineHandlerCountHtml();
 	return gameBoard;
 }
 //Funcion que crea el objeto celda
@@ -82,6 +83,11 @@ function randomlyAssignMines(gameBoard, minesCount, boardSize) {
 function flagHandlerCountHtml() {
 	var flag_html = document.getElementById('stat-value-flags');
 	flag_html.textContent = gameVar.flags;
+}
+
+function mineHandlerCountHtml() {
+	var mines_html = document.getElementById('stat-value-remaining');
+	mines_html.textContent = gameVar.minesCount;
 }
 // Se formatean minutes y segundos a dos digitos cada uno
 // Ejemplo minuto 5 transformado a 05
