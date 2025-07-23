@@ -1,4 +1,32 @@
 'use strict';
+
+function renderBoard(boardSize) {
+	var gameBoardContainer = document.querySelector('.game-board');
+	while (gameBoardContainer.firstChild) {
+		gameBoardContainer.removeChild(gameBoardContainer.firstChild);
+	}
+
+	for (var row = 0; row < boardSize; row++) {
+		for (var col = 0; col < boardSize; col++) {
+			var container = document.createElement('div');
+			container.className = 'cell-container';
+			container.setAttribute('data-row', row);
+			container.setAttribute('data-col', col);
+
+			var button = document.createElement('button');
+			button.className = 'cell-btn';
+
+			var img = document.createElement('img');
+			img.src = './app/img/tile.png';
+			img.alt = 'Celda';
+			img.className = 'cell-img';
+
+			button.appendChild(img);
+			container.appendChild(button);
+			gameBoardContainer.appendChild(container);
+		}
+	}
+}
 //Funcion que se encarga de crear el tablero
 function createBoard(boardSize, minesCount) {
 	for (var row = 0; row < boardSize; row++) {
@@ -17,6 +45,8 @@ function createBoard(boardSize, minesCount) {
 
 	gameBoard = randomlyAssignMines(gameBoard, minesCount, boardSize);
 	gameBoard = countAdjacentMines(gameBoard, boardSize);
+	flagHandlerCountHtml();
+	mineHandlerCountHtml();
 	return gameBoard;
 }
 //Funcion que crea el objeto celda
@@ -46,16 +76,19 @@ function randomlyAssignMines(gameBoard, minesCount, boardSize) {
 		}
 	}
 
-	bomb = minesPlaced;
-	flags = bomb;
+	gameVar.bomb = minesPlaced;
+	gameVar.flags = gameVar.bomb;
 	return gameBoard;
 }
-
 function flagHandlerCountHtml() {
 	var flag_html = document.getElementById('stat-value-flags');
-	flag_html.textContent = flags;
+	flag_html.textContent = gameVar.flags;
 }
 
+function mineHandlerCountHtml() {
+	var mines_html = document.getElementById('stat-value-remaining');
+	mines_html.textContent = gameVar.minesCount;
+}
 // Se formatean minutes y segundos a dos digitos cada uno
 // Ejemplo minuto 5 transformado a 05
 function formatTwoDigits(number) {
@@ -64,32 +97,34 @@ function formatTwoDigits(number) {
 	}
 	return number;
 }
-
 // Handler del timer que se ejecuta una vez presionada alguna celda tanto con click izquierdo como derecho
 function timeHandler() {
 	var timerHtml = document.getElementById('stat-value-time');
 
-	timer = formatTwoDigits(minutes) + ':' + formatTwoDigits(seconds);
+	timer =
+		formatTwoDigits(gameVar.minutes) +
+		':' +
+		formatTwoDigits(gameVar.seconds);
 	timerHtml.textContent = timer;
-	if (seconds == 59) {
-		minutes += 1;
-		seconds = 0;
+	if (gameVar.seconds == 59) {
+		gameVar.minutes += 1;
+		gameVar.seconds = 0;
 		return;
 	}
-	seconds += 1;
+	gameVar.seconds += 1;
 }
-
 // Funcion que maneja el click y eventos segun los estados de la celda
 function leftClick(e, gameBoard) {
 	// Buscamos el elemento con clase cell-container más cercano para extraer row y column
 	var container = e.target.closest('.cell-container');
 	var row = container.dataset.row;
 	var col = container.dataset.col;
-
-	console.log(gameStarted)
 	// Comprobar si el juego ya inicio
-	if (gameStarted === false) {
-		gameStarted = true;
+	if (gameVar.gameStarted === false && gameVar.gameOver === false) {
+		gameVar.gameStarted = true;
+		if (timeInterval) {
+			clearInterval(timeInterval);
+		}
 		timeInterval = setInterval(timeHandler, 1000);
 	}
 
@@ -99,11 +134,11 @@ function leftClick(e, gameBoard) {
 		gameBoard[row][col].opened === false &&
 		gameBoard[row][col].flagged === false
 	) {
+		checkWin(gameBoard);
 		var originalClick = true;
 		revealCell(gameBoard, row, col, originalClick);
 	}
 }
-
 function rightClick(e, gameBoard) {
 	var container = e.target.closest('.cell-container');
 	var row = container.dataset.row;
@@ -112,23 +147,26 @@ function rightClick(e, gameBoard) {
 	var gameBoardCell = gameBoard[row][col];
 
 	// Comprobar si el juego ya inicio
-	if (gameStarted === false) {
-		gameStarted = true;
-		setInterval(timeHandler, 1000);
+	if (gameVar.gameStarted === false && gameVar.gameOver === false) {
+		gameVar.gameStarted = true;
+		if (timeInterval) {
+			clearInterval(timeInterval);
+		}
+		timeInterval = setInterval(timeHandler, 1000);
 	}
 
-	if (gameOver === true) return;
+	if (gameVar.gameOver === true) return;
 
 	if (gameBoardCell.opened === true) return;
-
 
 	if (gameBoardCell.flagged === false) {
 		// Logica de celda sin bandera
 		e.target.src = './app/img/flag.png';
 		gameBoardCell.flagged = true;
 		// Se resta una flag
-		flags = flags - 1;
+		gameVar.flags = gameVar.flags - 1;
 		flagHandlerCountHtml();
+		checkWin(gameBoard);
 		return;
 	}
 
@@ -137,18 +175,17 @@ function rightClick(e, gameBoard) {
 		e.target.src = './app/img/tile.png';
 		gameBoardCell.flagged = false;
 		// Se suma una flag
-		flags = flags + 1;
+		gameVar.flags = gameVar.flags + 1;
 		flagHandlerCountHtml();
 		return;
 	}
 }
-
 // Funcion que asigna listeners de click a cada celda
 function addClickListenerToCells(gameBoard) {
 	// Recuperamos todas las celdas
 	var cells = document.getElementsByClassName('cell-container');
 	// Recorremos las celdas
-	for (var i = 0; i < 64; i++) {
+	for (var i = 0; i < cells.length; i++) {
 		var cell = cells[i];
 		// Asignamos el evento de click izquierdo a cada celda
 		cell.addEventListener('click', function (e) {
@@ -163,43 +200,44 @@ function addClickListenerToCells(gameBoard) {
 		});
 	}
 }
-
 function resetBoard() {
 	var cells = document.querySelectorAll('.cell-img');
-	for (var i = 0; i < cells.length ; i++){
+	for (var i = 0; i < cells.length; i++) {
 		cells[i].src = './app/img/tile.png';
-	};
+	}
+	clearInterval(timeInterval);
+	gameVar.gameStarted = false;
+	//Reiniciamos timer
+	gameVar.minutes = 0;
+	gameVar.seconds = 0;
+	timeHandler();
 }
-
 function addEventListenerToSpaceKey() {
 	document.addEventListener('keydown', function (e) {
 		if (e.keyCode === 32) {
 			e.preventDefault();
-			revealResetFace(false);
+			flagHandlerCountHtml();
+			revealResetFace('Smiley');
 			resetBoard();
-			clearInterval(timeInterval);
-			gameStarted = false;
-			//Reiniciamos timer
-			minutes = 0;
-			seconds = 0;
-			timeHandler();
-			gameBoard = createBoard(boardSize, minesCount);
-		};
+			gameBoard = createBoard(gameVar.boardSize, gameVar.minesCount);
+		}
 	});
 }
-
 function addClickListenerToButtonFace() {
 	var faceResetButton = document.querySelector('.start-reset-btn');
 	faceResetButton.addEventListener('click', function (e) {
-		revealResetFace(false);
+		gameVar.flags = gameVar.minesCount;
+		flagHandlerCountHtml();
+		revealResetFace('Smiley');
 		resetBoard();
-		clearInterval(timeInterval);
-		gameStarted = false;
-		//Reiniciamos timer
-		minutes = 0;
-		seconds = 0;
-		timeHandler();
-		gameBoard = createBoard(boardSize, minesCount);
+		gameBoard = createBoard(gameVar.boardSize, gameVar.minesCount);
+	});
+}
+
+function addClickListenerToModal() {
+	var closeBtn = document.getElementById('close-modal');
+	closeBtn.addEventListener('click', () => {
+		document.getElementById('win-modal').classList.add('hidden');
 	});
 }
 
@@ -219,7 +257,6 @@ function countAdjacentMines(gameBoard, boardSize) {
 	}
 	return gameBoard;
 }
-
 function countMinesAroundCell(gameBoard, boardSize, row, col) {
 	var countMines = 0;
 
@@ -245,13 +282,21 @@ function countMinesAroundCell(gameBoard, boardSize, row, col) {
 	return countMines;
 }
 function revealCell(gameBoard, row, col, originalClick) {
-	if (gameOver) return;
-	if (row < 0 || row >= boardSize || col < 0 || col >= boardSize) {
+	if (gameVar.gameOver) {
+		return;
+	} else if (
+		row < 0 ||
+		row >= gameVar.boardSize ||
+		col < 0 ||
+		col >= gameVar.boardSize
+	) {
 		return;
 	}
+
 	var shouldContinue = updateCellImage(gameBoard, row, col, originalClick);
+
 	if (!shouldContinue) {
-		return; // Detener recursividad si tiene minas vecinas
+		return;
 	}
 	// Expansión recursiva en todas las direcciones (8 celdas alrededor)
 	for (var r = row - 1; r <= row + 1; r++) {
@@ -263,8 +308,6 @@ function revealCell(gameBoard, row, col, originalClick) {
 		}
 	}
 }
-
-
 function updateCellImage(gameBoard, row, col, originalClick) {
 	var boardCell = gameBoard[row][col];
 	var cellElement = document.querySelector(
@@ -276,12 +319,12 @@ function updateCellImage(gameBoard, row, col, originalClick) {
 	);
 	var img = cellElement.querySelector('img');
 	//Es por la recusion que se vuelve a comprobar
-	if (!boardCell.opened) {
+	if (!boardCell.opened && !boardCell.flagged) {
 		if (boardCell.mined && originalClick) {
 			gameLose(gameBoard);
 			return false;
 		} else if (boardCell.neighborMineCount > 0) {
-			const numberImgMap = {
+			var numberImgMap = {
 				1: './app/img/number_one.png',
 				2: './app/img/number_two.png',
 				3: './app/img/number_three.png',
@@ -294,8 +337,7 @@ function updateCellImage(gameBoard, row, col, originalClick) {
 			img.src = numberImgMap[boardCell.neighborMineCount];
 			gameBoard[row][col].opened = true;
 			return false;
-		} 
-		else if (boardCell.mined === true)return false; 
+		} else if (boardCell.mined === true) return false;
 		else {
 			img.src = './app/img/opened_tile.png';
 			gameBoard[row][col].opened = true;
@@ -311,18 +353,18 @@ function gameLose(gameBoard) {
 	//Llama a la funcion para revelear el resto de minas en el tablero
 	revealAllMines(gameBoard);
 	//Cambia la imagen del boton de reset
-	revealResetFace(true);
+	revealResetFace('Loose');
 
-	gameStarted = false;
+	gameVar.gameStarted = false;
 	//Reiniciamos timer
-	minutes = 0;
-	seconds = 0;
+	gameVar.minutes = 0;
+	gameVar.seconds = 0;
 	timeHandler();
 }
 //Recorre el tablero y descubre todas las minas
 function revealAllMines(gameBoard) {
-	for (let row = 0; row < boardSize; row++) {
-		for (let col = 0; col < boardSize; col++) {
+	for (let row = 0; row < gameVar.boardSize; row++) {
+		for (let col = 0; col < gameVar.boardSize; col++) {
 			var boardCell = gameBoard[row][col];
 			if (boardCell.mined) {
 				var cellElement = document.querySelector(
@@ -342,11 +384,72 @@ function revealAllMines(gameBoard) {
 function revealResetFace(smileyFace) {
 	var faceReset = document.querySelector('.game-reset');
 	var faceImg = faceReset.querySelector('img');
-	if (smileyFace) {
-		gameOver = true;
-		faceImg.src = './app/img/sad-face.png';
-	} else {
-		gameOver = false;
-		faceImg.src = './app/img/smiley-face.png';
+	switch (smileyFace) {
+		case 'Loose':
+			gameVar.gameOver = true;
+			faceImg.src = './app/img/sad-face.png';
+			break;
+		case 'Smiley':
+			gameVar.gameOver = false;
+			faceImg.src = './app/img/smiley-face.png';
+			break;
+		case 'Win':
+			gameVar.gameOver = true;
+			faceImg.src = './app/img/cool-face.png';
+			break;
+		default:
+			break;
 	}
+}
+
+function setDifficulty(difficulty) {
+	switch (difficulty) {
+		case 'easy':
+			gameVar.boardSize = 8;
+			gameVar.minesCount = 10;
+			adjustBoardSize(gameVar.boardSize);
+			break;
+		case 'medium':
+			gameVar.boardSize = 12;
+			gameVar.minesCount = 25;
+			adjustBoardSize(gameVar.boardSize);
+			break;
+		case 'hard':
+			gameVar.boardSize = 16;
+			gameVar.minesCount = 40;
+			adjustBoardSize(gameVar.boardSize);
+			break;
+		default:
+			break;
+	}
+}
+
+function checkWin(gameBoard) {
+	for (var row = 0; row < gameVar.boardSize; row++) {
+		for (var col = 0; col < gameVar.boardSize; col++) {
+			var cell = gameBoard[row][col];
+			if (!cell.mined && !cell.opened) {
+				return;
+			}
+		}
+	}
+	gameWin();
+}
+
+function showWinModal() {
+	var modal = document.getElementById('win-modal');
+	modal.classList.remove('hidden');
+}
+
+function gameWin() {
+	gameVar.gameOver = true;
+	clearInterval(timeInterval);
+	revealResetFace('Win');
+	showWinModal();
+}
+
+function adjustBoardSize(boardSize) {
+	var gameBoard = document.querySelector('.game-board');
+	var width = boardSize * 2.5;
+	gameBoard.style.maxWidth = `${width}rem`;
 }
