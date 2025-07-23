@@ -17,6 +17,7 @@ document
 
 function initGame() {
 	gameVar.gameOver = false;
+	gameBoard = [];
 	gameBoard = createBoard(gameVar.boardSize, gameVar.minesCount);
 	renderBoard(gameVar.boardSize);
 	addClickListenerToCells(gameBoard);

@@ -119,7 +119,6 @@ function leftClick(e, gameBoard) {
 	var container = e.target.closest('.cell-container');
 	var row = container.dataset.row;
 	var col = container.dataset.col;
-
 	// Comprobar si el juego ya inicio
 	if (gameVar.gameStarted === false && gameVar.gameOver === false) {
 		gameVar.gameStarted = true;
@@ -186,7 +185,7 @@ function addClickListenerToCells(gameBoard) {
 	// Recuperamos todas las celdas
 	var cells = document.getElementsByClassName('cell-container');
 	// Recorremos las celdas
-	for (var i = 0; i < 64; i++) {
+	for (var i = 0; i < cells.length; i++) {
 		var cell = cells[i];
 		// Asignamos el evento de click izquierdo a cada celda
 		cell.addEventListener('click', function (e) {
