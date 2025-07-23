@@ -134,9 +134,9 @@ function leftClick(e, gameBoard) {
 		gameBoard[row][col].opened === false &&
 		gameBoard[row][col].flagged === false
 	) {
-		checkWin(gameBoard);
 		var originalClick = true;
 		revealCell(gameBoard, row, col, originalClick);
+		checkWin(gameBoard);
 	}
 }
 function rightClick(e, gameBoard) {
