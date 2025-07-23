@@ -130,6 +130,8 @@ function leftClick(e, gameBoard) {
 		gameBoard[row][col].opened === false &&
 		gameBoard[row][col].flagged === false
 	) {
+		checkWin(gameBoard);
+		console.log(gameBoard)
 		var originalClick = true;
 		revealCell(gameBoard, row, col, originalClick);
 	}
@@ -227,6 +229,14 @@ function addClickListenerToButtonFace() {
 		gameBoard = createBoard(gameVar.boardSize, gameVar.minesCount);
 	});
 }
+
+function addClickListenerToModal(){
+	var closeBtn = document.getElementById('close-modal');
+		closeBtn.addEventListener('click', () => {
+		document.getElementById('win-modal').classList.add('hidden');
+	});
+}
+
 function countAdjacentMines(gameBoard, boardSize) {
 	// Calcula minas adyacentes para cada celda
 	for (var row = 0; row < boardSize; row++) {
@@ -277,9 +287,7 @@ function revealCell(gameBoard, row, col, originalClick) {
 		col >= gameVar.boardSize
 	) {
 		return;
-	} else {
-		checkWin(gameBoard);
-	}
+	} 
 
 	var shouldContinue = updateCellImage(gameBoard, row, col, originalClick);
 
@@ -417,6 +425,7 @@ function checkWin(gameBoard) {
 		for (var col = 0; col < gameVar.boardSize; col++) {
 			var cell = gameBoard[row][col];
 			if (!cell.mined && !cell.opened) {
+				console.log(`Falta abrir: (${cell.row}, ${cell.column})`);
 				return;
 			}
 		}
@@ -424,11 +433,19 @@ function checkWin(gameBoard) {
 	gameWin();
 }
 
+function showWinModal() {
+	var modal = document.getElementById('win-modal');
+	modal.classList.remove('hidden');
+}
+
 function gameWin() {
+	gameVar.gameOver = true;
 	clearInterval(timeInterval);
 	revealResetFace('Win');
-	console.log('Ganaste');
+	showWinModal();
 }
+
+
 
 function adjustBoardSize(boardSize) {
 	var gameBoard = document.querySelector('.game-board');

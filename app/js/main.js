@@ -22,4 +22,5 @@ function initGame() {
 	addClickListenerToCells(gameBoard);
 	addClickListenerToButtonFace();
 	addEventListenerToSpaceKey();
-}
+	addClickListenerToModal();
+};
