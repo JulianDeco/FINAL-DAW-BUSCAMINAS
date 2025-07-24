@@ -130,14 +130,13 @@ function leftClick(e, gameBoard) {
 
 	if (gameBoard[row][col].flagged === true) return;
 
-	if (
-		gameBoard[row][col].opened === false &&
-		gameBoard[row][col].flagged === false
-	) {
+	if (!gameBoard[row][col].opened) {
 		var originalClick = true;
 		revealCell(gameBoard, row, col, originalClick);
-		checkWin(gameBoard);
+	} else if (gameBoard[row][col].neighborMineCount > 0) {
+		handleChordClick(gameBoard, gameVar.boardSize, row, col);
 	}
+	checkWin(gameBoard);
 }
 function rightClick(e, gameBoard) {
 	var container = e.target.closest('.cell-container');
@@ -452,4 +451,50 @@ function adjustBoardSize(boardSize) {
 	var gameBoard = document.querySelector('.game-board');
 	var width = boardSize * 2.5;
 	gameBoard.style.maxWidth = `${width}rem`;
+}
+
+function handleChordClick(gameBoard, boardSize, row, col) {
+	var cell = gameBoard[row][col];
+	var correctFlags = 0;
+	// Verificar si coinciden las bombas y las banderas
+	for (
+		var r = Math.max(0, row - 1);
+		r <= Math.min(boardSize - 1, row + 1);
+		r++
+	) {
+		for (
+			var c = Math.max(0, col - 1);
+			c <= Math.min(boardSize - 1, col + 1);
+			c++
+		) {
+			if (r === row && c === col) {
+				continue;
+			} else if (gameBoard[r][c].flagged && gameBoard[r][c].mined) {
+				correctFlags++;
+			}
+		}
+	}
+
+	if (correctFlags === cell.neighborMineCount) {
+		for (
+			var r = Math.max(0, row - 1);
+			r <= Math.min(boardSize - 1, row + 1);
+			r++
+		) {
+			for (
+				var c = Math.max(0, col - 1);
+				c <= Math.min(boardSize - 1, col + 1);
+				c++
+			) {
+				if (
+					(r === row && c === col) ||
+					gameBoard[r][c].opened ||
+					gameBoard[r][c].flagged
+				) {
+					continue;
+				}
+				updateCellImage(gameBoard, r, c, false);
+			}
+		}
+	}
 }
