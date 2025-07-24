@@ -291,7 +291,34 @@ function revealAllMines(gameBoard) {
 	}
 }
 
+function saveWinRecords() {
+    // Obtener fecha actual en formato YYYY-MM-DD HH:MM:SS (24hs)
+    var now = new Date();
+    // Crear objeto con los datos
+    var record = {
+        date: now, 
+        time: timer,
+        difficulty: gameVar.difficulty
+    };
+    
+    // Convertir a JSON y guardar en localStorage
+    var existingRecords = localStorage.getItem('winRecords');
+    var allRecords = existingRecords ? JSON.parse(existingRecords) : [];
+    allRecords.push(record);
+    localStorage.setItem('winRecords', JSON.stringify(allRecords));
+}
 
+function showWinModal() {
+	var modal = document.getElementById('win-modal');
+	modal.classList.remove('hidden');
+}
+function gameWin() {
+	saveWinRecords();
+	gameVar.gameOver = true;
+	clearInterval(timeInterval);
+	revealResetFace('Win');
+	showWinModal();
+}
 
 function checkWin(gameBoard) {
 	for (var row = 0; row < gameVar.boardSize; row++) {
@@ -304,18 +331,6 @@ function checkWin(gameBoard) {
 	}
 	gameWin();
 }
-function showWinModal() {
-	var modal = document.getElementById('win-modal');
-	modal.classList.remove('hidden');
-}
-function gameWin() {
-	gameVar.gameOver = true;
-	clearInterval(timeInterval);
-	revealResetFace('Win');
-	showWinModal();
-}
-
-
 
 function resetBoard() {
 	var cells = document.querySelectorAll('.cell-img');
@@ -334,16 +349,19 @@ function setDifficulty(difficulty) {
 		case 'easy':
 			gameVar.boardSize = 8;
 			gameVar.minesCount = 10;
+			gameVar.difficulty = 'easy';
 			adjustBoardSize(gameVar.boardSize);
 			break;
 		case 'medium':
 			gameVar.boardSize = 12;
 			gameVar.minesCount = 25;
+			gameVar.difficulty = 'mediaum';
 			adjustBoardSize(gameVar.boardSize);
 			break;
 		case 'hard':
 			gameVar.boardSize = 16;
 			gameVar.minesCount = 40;
+			gameVar.difficulty = 'hard';
 			adjustBoardSize(gameVar.boardSize);
 			break;
 		default:

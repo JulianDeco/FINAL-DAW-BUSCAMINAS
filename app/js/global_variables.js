@@ -8,6 +8,7 @@ var gameVar = {
 	bomb: 0,
 	seconds: 0,
 	minutes: 0,
+	difficulty: 'easy'
 };
 
 var gameBoard = [];
