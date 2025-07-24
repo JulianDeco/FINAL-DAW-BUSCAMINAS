@@ -76,7 +76,6 @@ function eventListenerForm(e) {
 	}
 
 	if (isValid) {
-		alert('Gracias por tu mensaje. Se abrirá tu cliente de correo.');
 		e.target.submit();
 		e.target.reset();
 	}
