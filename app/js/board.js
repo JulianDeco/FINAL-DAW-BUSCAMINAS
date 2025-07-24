@@ -311,6 +311,7 @@ function saveWinRecords() {
 
 	var now = new Date();
 	var record = {
+		name: '',
 		date: now.toISOString(),
 		time: timer,
 		difficulty: gameVar.difficulty || 'unknown',
@@ -514,13 +515,12 @@ function handleChordClick(gameBoard, boardSize, row, col) {
 	row = parseInt(row);
 	col = parseInt(col);
 
-	// Obtiene la celda actual
 	var cell = gameBoard[row][col];
 
 	// Si la celda no está abierta, no tiene minas vecinas, o el juego ya terminó, no hace nada
-	if (!cell.opened || cell.neighborMineCount === 0 || gameVar.gameOver) {
-		return;
-	}
+	//if (!cell.opened || cell.neighborMineCount === 0 || gameVar.gameOver) {
+	//	return;
+	//}
 
 	// Inicializa contadores y estructuras auxiliares
 	var flagCount = 0;

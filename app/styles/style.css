@@ -139,6 +139,7 @@ header .title {
 .game-reset .start-reset-btn {
 	background-color: #c0c0c0;
 	border: 2px solid;
+	margin: 5px;
 	border-color: #ffffff #808080 #808080 #ffffff;
 	padding: 4px;
 	cursor: pointer;
@@ -241,6 +242,7 @@ footer {
 	border-color: #ffffff #808080 #808080 #ffffff;
 	padding: 4px;
 	display: inline-block;
+	margin: 5px
 }
 
 .github-btn:active {
