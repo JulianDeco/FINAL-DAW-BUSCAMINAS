@@ -296,7 +296,7 @@ function timeToSeconds(time) {
 	return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
 }
 
-// Función para ordenar records por tiempo (de mayor a menor)
+// Función para ordenar records por tiempo (de menor a mayor)
 function sortRecordsByTime(records) {
 	return records.sort(function (a, b) {
 		return timeToSeconds(a.time) - timeToSeconds(b.time);
