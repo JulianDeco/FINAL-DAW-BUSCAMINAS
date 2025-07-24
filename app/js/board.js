@@ -121,7 +121,6 @@ function adjustBoardSize(boardSize) {
 	gameBoard.style.maxWidth = `${width}rem`;
 }
 
-
 function renderBoard(boardSize) {
 	var gameBoardContainer = document.querySelector('.game-board');
 	while (gameBoardContainer.firstChild) {
@@ -166,7 +165,6 @@ function timeHandler() {
 	}
 	gameVar.seconds += 1;
 }
-
 
 function gameLose(gameBoard) {
 	//Frena el contador
@@ -291,21 +289,48 @@ function revealAllMines(gameBoard) {
 	}
 }
 
+function timeToSeconds(time) {
+	if (!time || typeof time !== 'string') return 0;
+	var parts = time.split(':');
+	if (parts.length !== 2) return 0;
+	return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+}
+
+// Función para ordenar records por tiempo (de mayor a menor)
+function sortRecordsByTime(records) {
+	return records.sort(function (a, b) {
+		return timeToSeconds(a.time) - timeToSeconds(b.time);
+	});
+}
+
 function saveWinRecords() {
-    // Obtener fecha actual en formato YYYY-MM-DD HH:MM:SS (24hs)
-    var now = new Date();
-    // Crear objeto con los datos
-    var record = {
-        date: now, 
-        time: timer,
-        difficulty: gameVar.difficulty
-    };
-    
-    // Convertir a JSON y guardar en localStorage
-    var existingRecords = localStorage.getItem('winRecords');
-    var allRecords = existingRecords ? JSON.parse(existingRecords) : [];
-    allRecords.push(record);
-    localStorage.setItem('winRecords', JSON.stringify(allRecords));
+	if (!timer || typeof timer !== 'string') {
+		console.error('Timer no está definido o no es string');
+		return;
+	}
+
+	var now = new Date();
+	var record = {
+		date: now.toISOString(),
+		time: timer,
+		difficulty: gameVar.difficulty || 'unknown',
+	};
+	console.log(record);
+	// Obtener records existentes
+	var existingRecords = JSON.parse(localStorage.getItem('winRecords')) || [];
+
+	// Validar que sea un array
+	if (!Array.isArray(existingRecords)) {
+		existingRecords = [];
+	}
+	console.log(existingRecords);
+	// Agregar nuevo record
+	existingRecords.push(record);
+	console.log(existingRecords);
+	// Ordenar y guardar
+	var orderedRecords = sortRecordsByTime(existingRecords);
+	console.log(orderedRecords);
+	localStorage.setItem('winRecords', JSON.stringify(orderedRecords));
 }
 
 function showWinModal() {
