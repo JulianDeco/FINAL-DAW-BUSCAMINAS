@@ -12,7 +12,6 @@ document
 		setDifficulty(difficulty);
 		initGame();
 		resetBoard();
-		revealResetFace(false);
 	});
 
 function initGame() {

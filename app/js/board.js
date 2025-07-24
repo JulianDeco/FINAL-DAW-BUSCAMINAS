@@ -194,7 +194,7 @@ function updateCellImage(gameBoard, row, col, originalClick) {
 	//Es por la recusion que se vuelve a comprobar
 	if (!boardCell.opened && !boardCell.flagged) {
 		if (boardCell.mined && originalClick) {
-			gameLose(gameBoard);
+			//gameLose(gameBoard);
 			return false;
 		} else if (boardCell.neighborMineCount > 0) {
 			var numberImgMap = {
@@ -303,7 +303,7 @@ function sortRecordsByTime(records) {
 	});
 }
 
-function saveWinRecords() {
+function saveWinRecords(nicName) {
 	if (!timer || typeof timer !== 'string') {
 		console.error('Timer no está definido o no es string');
 		return;
@@ -311,27 +311,20 @@ function saveWinRecords() {
 
 	var now = new Date();
 	var record = {
-		name: '',
+		name: nicName,
 		date: now.toISOString(),
 		time: timer,
-		difficulty: gameVar.difficulty || 'unknown',
+		difficulty: gameVar.difficulty,
 	};
 	console.log(record);
 	// Obtener records existentes
 	var existingRecords = JSON.parse(localStorage.getItem('winRecords')) || [];
 
-	// Validar que sea un array
-	if (!Array.isArray(existingRecords)) {
-		existingRecords = [];
-	}
-	console.log(existingRecords);
-	// Agregar nuevo record
 	existingRecords.push(record);
-	console.log(existingRecords);
 	// Ordenar y guardar
 	var orderedRecords = sortRecordsByTime(existingRecords);
-	console.log(orderedRecords);
 	localStorage.setItem('winRecords', JSON.stringify(orderedRecords));
+	return;
 }
 
 function showWinModal() {
@@ -339,7 +332,6 @@ function showWinModal() {
 	modal.classList.remove('hidden');
 }
 function gameWin() {
-	saveWinRecords();
 	gameVar.gameOver = true;
 	clearInterval(timeInterval);
 	revealResetFace('Win');
@@ -364,6 +356,7 @@ function resetBoard() {
 		cells[i].src = './app/img/tile.png';
 	}
 	clearInterval(timeInterval);
+	revealResetFace('Smiley');
 	gameVar.gameStarted = false;
 	//Reiniciamos timer
 	gameVar.minutes = 0;
@@ -381,7 +374,7 @@ function setDifficulty(difficulty) {
 		case 'medium':
 			gameVar.boardSize = 12;
 			gameVar.minesCount = 25;
-			gameVar.difficulty = 'mediaum';
+			gameVar.difficulty = 'medium';
 			adjustBoardSize(gameVar.boardSize);
 			break;
 		case 'hard':
@@ -486,16 +479,22 @@ function addEventListenerToSpaceKey() {
 		if (e.keyCode === 32) {
 			e.preventDefault();
 			flagHandlerCountHtml();
-			revealResetFace('Smiley');
 			resetBoard();
 			gameBoard = createBoard(gameVar.boardSize, gameVar.minesCount);
 		}
 	});
 }
 function addClickListenerToModal() {
-	var closeBtn = document.getElementById('close-modal');
+	var closeBtn = document.getElementById('close-modal-close');
 	closeBtn.addEventListener('click', () => {
 		document.getElementById('win-modal').classList.add('hidden');
+		resetBoard();
+	});
+	var okBtn = document.getElementById('close-modal-ok');
+	okBtn.addEventListener('click', () => {
+		document.getElementById('win-modal').classList.add('hidden');
+		var nicName = document.getElementById('nic-name');
+		saveWinRecords(nicName.value);
 	});
 }
 
@@ -504,17 +503,12 @@ function addClickListenerToButtonFace() {
 	faceResetButton.addEventListener('click', function (e) {
 		gameVar.flags = gameVar.minesCount;
 		flagHandlerCountHtml();
-		revealResetFace('Smiley');
 		resetBoard();
 		gameBoard = createBoard(gameVar.boardSize, gameVar.minesCount);
 	});
 }
 
 function handleChordClick(gameBoard, boardSize, row, col) {
-	// Asegura que row y col sean enteros
-	row = parseInt(row);
-	col = parseInt(col);
-
 	var cell = gameBoard[row][col];
 
 	// Si la celda no está abierta, no tiene minas vecinas, o el juego ya terminó, no hace nada
