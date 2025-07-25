@@ -303,7 +303,7 @@ function sortRecordsByTime(records) {
 	});
 }
 
-function saveWinRecords(nicName) {
+function saveWinRecords(nickName) {
 	if (!timer || typeof timer !== 'string') {
 		console.error('Timer no está definido o no es string');
 		return;
@@ -311,7 +311,7 @@ function saveWinRecords(nicName) {
 
 	var now = new Date();
 	var record = {
-		name: nicName,
+		name: nickName,
 		date: now.toISOString(),
 		time: timer,
 		difficulty: gameVar.difficulty,
@@ -360,15 +360,19 @@ function showRecordsModal(difficulty) {
 				'<div class="record-item">' +
 				'<span class="record-position">' +
 				(i + 1) +
+				' - ' +
 				'</span>' +
 				'<span>' +
 				record.name +
+				' - ' +
 				'</span>' +
 				'<span>' +
 				record.time +
+				' - ' +
 				'</span>' +
 				'<span>' +
 				date +
+				' - ' +
 				'</span>' +
 				'</div>';
 		}
@@ -564,8 +568,8 @@ function addClickListenerToModal() {
 	var okBtn = document.getElementById('close-modal-ok');
 	okBtn.addEventListener('click', function () {
 		document.getElementById('win-modal').classList.add('hidden');
-		var nicName = document.getElementById('nic-name');
-		saveWinRecords(nicName.value);
+		var nickName = document.getElementById('nick-name');
+		saveWinRecords(nickName.value);
 	});
 }
 
