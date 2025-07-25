@@ -588,82 +588,59 @@ function addClickListenerToButtonRanking() {
 }
 
 function handleChordClick(gameBoard, boardSize, row, col) {
-	var cell = gameBoard[row][col];
+    row = parseInt(row);
+    col = parseInt(col);
+    
+    var cell = gameBoard[row][col];
 
-	// Inicializa contadores y estructuras auxiliares
-	var flagCount = 0;
-	var hasIncorrectFlag = false;
-	var cellsToReveal = [];
+    var flagCount = 0;
+    var hasIncorrectFlag = false;
+    var cellsToReveal = [];
 
-	// Define los límites del área 3x3 alrededor de la celda, manejando bordes del tablero
-	var startRow = Math.max(0, row - 1);
-	var endRow = Math.min(boardSize - 1, row + 1);
-	var startCol = Math.max(0, col - 1);
-	var endCol = Math.min(boardSize - 1, col + 1);
+    // Definir los límites exactos del área 3x3
+    var startRow = Math.max(0, row - 1);
+    var endRow = Math.min(boardSize - 1, row + 1);
+    var startCol = Math.max(0, col - 1);
+    var endCol = Math.min(boardSize - 1, col + 1);
 
-	// Recorre las celdas alrededor
-	for (var r = startRow; r <= endRow; r++) {
-		for (var c = startCol; c <= endCol; c++) {
-			if (r === row && c === col) continue; // Omite la celda central
+    for (var r = startRow; r <= endRow; r++) {
+        for (var c = startCol; c <= endCol; c++) {
+            if (r === row && c === col) continue;
+            
+            var adjacentCell = gameBoard[r][c];
+            
+            if (adjacentCell.flagged) {
+                flagCount++;
+                // Verificar si la bandera es incorrecta
+                if (!adjacentCell.mined) {
+                    hasIncorrectFlag = true;
+                }
+            } else if (!adjacentCell.opened) {
+                // Agregar a celdas a revelar (solo las no abiertas)
+                cellsToReveal.push({row: r, col: c});
+            }
+        }
+    }
+    // Si hay banderas incorrectas, perder el juego
+    if (hasIncorrectFlag) {
+        gameLose(gameBoard);
+        return;
+    }
 
-			var adjacentCell = gameBoard[r][c];
-
-			// Cuenta banderas y verifica si hay alguna incorrecta
-			if (adjacentCell.flagged) {
-				flagCount++;
-				if (!adjacentCell.mined) {
-					hasIncorrectFlag = true;
-				}
-			}
-			// Si la celda no está abierta ni tiene bandera, se considera para revelar
-			else if (!adjacentCell.opened && !adjacentCell.flagged) {
-				cellsToReveal.push({ row: r, col: c });
-			}
-		}
-	}
-
-	// Si hay una bandera mal puesta, se pierde el juego
-	if (hasIncorrectFlag) {
-		gameLose(gameBoard);
-		return;
-	}
-
-	// Si la cantidad de banderas coincide con la cantidad de minas vecinas
-	if (flagCount === cell.neighborMineCount) {
-		// Intenta revelar las celdas alrededor
-		for (var i = 0; i < cellsToReveal.length; i++) {
-			var r2 = cellsToReveal[i].row;
-			var c2 = cellsToReveal[i].col;
-			var targetCell = gameBoard[r2][c2];
-
-			// Si la celda no está abierta ni tiene bandera
-			if (!targetCell.opened && !targetCell.flagged) {
-				// Actualiza la imagen de la celda (revela)
-				var shouldContinue = updateCellImage(gameBoard, r2, c2, false);
-
-				// Si era una mina, se pierde
-				if (targetCell.mined) {
-					gameLose(gameBoard);
-					return;
-				}
-
-				// Si no tenía minas vecinas, la marcamos para expandir luego
-				if (shouldContinue && targetCell.neighborMineCount === 0) {
-					targetCell.tempMarked = true;
-				}
-			}
-		}
-
-		// Ahora se expanden las celdas marcadas temporalmente
-		for (var j = 0; j < cellsToReveal.length; j++) {
-			var r3 = cellsToReveal[j].row;
-			var c3 = cellsToReveal[j].col;
-			var targetCell2 = gameBoard[r3][c3];
-
-			if (targetCell2.tempMarked) {
-				delete targetCell2.tempMarked;
-				revealCell(gameBoard, r3, c3, false);
-			}
-		}
-	}
+    // Solo si el conteo de banderas coincide exactamente
+    if (flagCount === cell.neighborMineCount) {
+        // Revelar SOLO las celdas adyacentes en el área 3x3
+        for (var i = 0; i < cellsToReveal.length; i++) {
+            var r = cellsToReveal[i].row;
+            var c = cellsToReveal[i].col;
+            
+            updateCellImage(gameBoard, r, c, false);
+            
+            // Si es una mina, perder inmediatamente
+            if (gameBoard[r][c].mined) {
+                gameLose(gameBoard);
+                return;
+            }
+        }
+    }
 }
