@@ -194,7 +194,7 @@ function updateCellImage(gameBoard, row, col, originalClick) {
 	//Es por la recusion que se vuelve a comprobar
 	if (!boardCell.opened && !boardCell.flagged) {
 		if (boardCell.mined && originalClick) {
-			//gameLose(gameBoard);
+			gameLose(gameBoard);
 			return false;
 		} else if (boardCell.neighborMineCount > 0) {
 			var numberImgMap = {
@@ -316,21 +316,91 @@ function saveWinRecords(nicName) {
 		time: timer,
 		difficulty: gameVar.difficulty,
 	};
-	console.log(record);
-	// Obtener records existentes
+
 	var existingRecords = JSON.parse(localStorage.getItem('winRecords')) || [];
 
 	existingRecords.push(record);
-	// Ordenar y guardar
+	// Se guardan en local storage ya ordenados
 	var orderedRecords = sortRecordsByTime(existingRecords);
 	localStorage.setItem('winRecords', JSON.stringify(orderedRecords));
+	showRecordsModal('all');
 	return;
+}
+
+function showRecordsModal(difficulty) {
+	var modal = document.getElementById('records-modal');
+	var records = JSON.parse(localStorage.getItem('winRecords')) || [];
+	modal.classList.remove('hidden');
+
+	var filteredRecords;
+	// filtra por dificultad en caso que no sea all
+	if (difficulty !== 'all') {
+		filteredRecords = records.filter(function (r) {
+			return r.difficulty === difficulty;
+		});
+	} else {
+		filteredRecords = records;
+	}
+
+	var html = `
+        <div class="records-header">
+            <span>Pos.</span>
+            <span>Nombre</span>
+            <span>Tiempo</span>
+            <span>Fecha</span>
+        </div>`;
+
+	if (filteredRecords.length === 0) {
+		html += '<p>No hay records aún</p>';
+	} else {
+		for (var i = 0; i < filteredRecords.length; i++) {
+			var record = filteredRecords[i];
+			var date = new Date(record.date).toLocaleDateString();
+			html +=
+				'<div class="record-item">' +
+				'<span class="record-position">' +
+				(i + 1) +
+				'</span>' +
+				'<span>' +
+				record.name +
+				'</span>' +
+				'<span>' +
+				record.time +
+				'</span>' +
+				'<span>' +
+				date +
+				'</span>' +
+				'</div>';
+		}
+	}
+	document.getElementById('records-table').innerHTML = html;
+
+	// Event listeners para los selectores de ranking
+	var tabs = document.querySelectorAll('.tab');
+	tabs.forEach(function (tab) {
+		tab.addEventListener('click', function () {
+			tabs.forEach(function (t) {
+				t.classList.remove('active');
+			});
+			this.classList.add('active');
+			showRecordsModal(this.getAttribute('data-difficulty'));
+		});
+	});
+
+	//Boton de close
+	var closeRecord = document.getElementById('close-record-modal');
+	closeRecord.addEventListener('click', function () {
+		document.getElementById('records-modal').classList.add('hidden');
+		resetBoard();
+		initGame();
+	});
 }
 
 function showWinModal() {
 	var modal = document.getElementById('win-modal');
 	modal.classList.remove('hidden');
 }
+
 function gameWin() {
 	gameVar.gameOver = true;
 	clearInterval(timeInterval);
@@ -486,12 +556,13 @@ function addEventListenerToSpaceKey() {
 }
 function addClickListenerToModal() {
 	var closeBtn = document.getElementById('close-modal-close');
-	closeBtn.addEventListener('click', () => {
+	closeBtn.addEventListener('click', function () {
 		document.getElementById('win-modal').classList.add('hidden');
 		resetBoard();
+		initGame();
 	});
 	var okBtn = document.getElementById('close-modal-ok');
-	okBtn.addEventListener('click', () => {
+	okBtn.addEventListener('click', function () {
 		document.getElementById('win-modal').classList.add('hidden');
 		var nicName = document.getElementById('nic-name');
 		saveWinRecords(nicName.value);
@@ -506,15 +577,11 @@ function addClickListenerToButtonFace() {
 		resetBoard();
 		gameBoard = createBoard(gameVar.boardSize, gameVar.minesCount);
 	});
+	revealResetFace('Smiley');
 }
 
 function handleChordClick(gameBoard, boardSize, row, col) {
 	var cell = gameBoard[row][col];
-
-	// Si la celda no está abierta, no tiene minas vecinas, o el juego ya terminó, no hace nada
-	//if (!cell.opened || cell.neighborMineCount === 0 || gameVar.gameOver) {
-	//	return;
-	//}
 
 	// Inicializa contadores y estructuras auxiliares
 	var flagCount = 0;

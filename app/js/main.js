@@ -10,8 +10,8 @@ document
 	.addEventListener('change', function (e) {
 		var difficulty = e.target.value;
 		setDifficulty(difficulty);
-		initGame();
 		resetBoard();
+		initGame();
 	});
 
 function initGame() {
