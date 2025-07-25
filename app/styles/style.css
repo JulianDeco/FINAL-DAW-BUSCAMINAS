@@ -328,6 +328,11 @@ footer {
 
 .ranking-btn {
 	cursor: pointer;
+	background-color: #c0c0c0;
+	border: 2px solid;
+	border-color: #ffffff #808080 #808080 #ffffff;
+	padding: 4px;
+	display: inline-block;
 	margin: 5px;
 }
 
