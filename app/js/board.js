@@ -580,6 +580,13 @@ function addClickListenerToButtonFace() {
 	revealResetFace('Smiley');
 }
 
+function addClickListenerToButtonRanking() {
+	var buttonRanking = document.getElementById('show-ranking-btn');
+	buttonRanking.addEventListener('click', function () {
+		showRecordsModal('all');
+	});
+}
+
 function handleChordClick(gameBoard, boardSize, row, col) {
 	var cell = gameBoard[row][col];
 

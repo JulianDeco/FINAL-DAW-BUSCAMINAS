@@ -23,4 +23,5 @@ function initGame() {
 	addClickListenerToButtonFace();
 	addEventListenerToSpaceKey();
 	addClickListenerToModal();
+	addClickListenerToButtonRanking();
 }

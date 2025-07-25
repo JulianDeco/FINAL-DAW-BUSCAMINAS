@@ -242,7 +242,7 @@ footer {
 	border-color: #ffffff #808080 #808080 #ffffff;
 	padding: 4px;
 	display: inline-block;
-	margin: 5px
+	margin: 5px;
 }
 
 .github-btn:active {
@@ -324,4 +324,13 @@ footer {
 	color: #7a0909;
 	font-size: '12px';
 	margin-top: '4px';
+}
+
+.ranking-btn {
+	cursor: pointer;
+}
+
+.ranking-button-img {
+	width: 2rem;
+	height: 2rem;
 }
