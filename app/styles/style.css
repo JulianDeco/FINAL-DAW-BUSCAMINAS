@@ -10,7 +10,7 @@ body {
 header {
   background-color: #000080;
   color: #ffffff;
-  padding: 0.5rem 0;
+  padding: 8px 0;
   text-align: center;
   border-bottom: 2px solid #dfdfdf;
   width: 100%;
@@ -21,7 +21,7 @@ header {
 
 header .title {
   margin: 0;
-  font-size: 1.125rem;
+  font-size: 18px;
   font-weight: bold;
   text-shadow: 1px 1px 1px #000000;
 }
@@ -37,13 +37,14 @@ main {
 footer {
   background-color: #c0c0c0;
   padding: 8px;
+  margin: auto;
   text-align: center;
   font-size: 12px;
-  width: 100%;
   border-top: 2px solid #dfdfdf;
   position: fixed;
   bottom: 0;
   left: 0;
+  right: 0;
 }
 
 .game-container {
@@ -51,7 +52,7 @@ footer {
   border: 2px solid;
   border-color: #ffffff #808080 #808080 #ffffff;
   padding: 8px;
-  box-shadow: 2px 2px 4px #00000080;
+  box-shadow: 2px 2px 4px #000000cc;
   margin: 20px 0;
 }
 
@@ -168,7 +169,7 @@ footer {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: #00000080;
+  background-color: #000000cc;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -177,7 +178,7 @@ footer {
 
 .modal-content {
   background-color: #c0c0c0;
-  padding: 1.5rem;
+  padding: 24px;
   border: 2px solid;
   border-color: #ffffff #808080 #808080 #ffffff;
   text-align: center;
@@ -188,13 +189,13 @@ footer {
 .modal-content h2 {
   margin: 0 0 8px 0;
   color: #000080;
-  font-size: 1.25rem;
+  font-size: 20px;
 }
 
 .modal-content p {
   margin: 0 0 16px 0;
   color: #000000;
-  font-size: 1rem;
+  font-size: 16px;
 }
 
 .modal-content button {
@@ -203,7 +204,7 @@ footer {
   border: 2px solid;
   border-color: #ffffff #808080 #808080 #ffffff;
   padding: 8px 16px;
-  font-size: 1rem;
+  font-size: 16px;
   cursor: pointer;
 }
 
@@ -247,8 +248,7 @@ footer {
   border-color: #ffffff #808080 #808080 #ffffff;
   padding: 16px;
   margin: 20px;
-  min-width: 500px;
-  box-shadow: 2px 2px 4px #00000080;
+  box-shadow: 2px 2px 4px #000000cc;
 }
 
 .contact-form {
@@ -319,4 +319,13 @@ textarea {
 .ranking-button-img {
   width: 32px;
   height: 32px;
+}
+
+@media (min-width: 768px) {
+  .contact-container {
+    min-width: 500px;
+  }
+  .footer{
+	min-width: 100vh;
+  }
 }
