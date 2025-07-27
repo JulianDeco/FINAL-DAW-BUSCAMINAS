@@ -44,8 +44,8 @@ function validateEmail(e) {
 
 function validateMessage(e) {
 	var input = e.target;
-	if (input.value.trim().length < 10 && input.value.trim().length > 0) {
-		showError(input, 'El mensaje debe tener al menos 10 caracteres');
+	if (input.value.trim().length < 5 && input.value.trim().length > 0) {
+		showError(input, 'El mensaje debe tener al menos 5 caracteres');
 	}
 }
 
@@ -70,8 +70,8 @@ function eventListenerForm(e) {
 		isValid = false;
 	}
 
-	if (messageInput.value.trim().length < 10) {
-		showError(messageInput, 'El mensaje debe tener al menos 10 caracteres');
+	if (messageInput.value.trim().length < 5) {
+		showError(messageInput, 'El mensaje debe tener al menos 5 caracteres');
 		isValid = false;
 	}
 
