@@ -1,5 +1,18 @@
 'use strict';
 
+//Funcion para arrancar el juego
+function initGame() {
+	gameVar.gameOver = false;
+	gameBoard = [];
+	gameBoard = createBoard(gameVar.boardSize, gameVar.minesCount);
+	renderBoard(gameVar.boardSize);
+	addClickListenerToCells(gameBoard);
+	addClickListenerToButtonFace();
+	addEventListenerToSpaceKey();
+	addClickListenerToModal();
+	addClickListenerToButtonRanking();
+}
+
 // Se formatean minutes y segundos a dos digitos cada uno
 // Ejemplo minuto 5 transformado a 05
 function formatTwoDigits(number) {
@@ -194,7 +207,7 @@ function updateCellImage(gameBoard, row, col, originalClick) {
 	//Es por la recusion que se vuelve a comprobar
 	if (!boardCell.opened && !boardCell.flagged) {
 		if (boardCell.mined && originalClick) {
-			gameLose(gameBoard);
+			//gameLose(gameBoard);
 			return false;
 		} else if (boardCell.neighborMineCount > 0) {
 			var numberImgMap = {
@@ -395,8 +408,10 @@ function showRecordsModal(difficulty) {
 	var closeRecord = document.getElementById('close-record-modal');
 	closeRecord.addEventListener('click', function () {
 		document.getElementById('records-modal').classList.add('hidden');
-		resetBoard();
-		initGame();
+		if (gameVar.gameOver) {
+			resetBoard();
+			initGame();
+		}
 	});
 }
 
@@ -592,59 +607,59 @@ function addClickListenerToButtonRanking() {
 }
 
 function handleChordClick(gameBoard, boardSize, row, col) {
-    row = parseInt(row);
-    col = parseInt(col);
-    
-    var cell = gameBoard[row][col];
+	row = parseInt(row);
+	col = parseInt(col);
 
-    var flagCount = 0;
-    var hasIncorrectFlag = false;
-    var cellsToReveal = [];
+	var cell = gameBoard[row][col];
 
-    // Definir los límites exactos del área 3x3
-    var startRow = Math.max(0, row - 1);
-    var endRow = Math.min(boardSize - 1, row + 1);
-    var startCol = Math.max(0, col - 1);
-    var endCol = Math.min(boardSize - 1, col + 1);
+	var flagCount = 0;
+	var hasIncorrectFlag = false;
+	var cellsToReveal = [];
 
-    for (var r = startRow; r <= endRow; r++) {
-        for (var c = startCol; c <= endCol; c++) {
-            if (r === row && c === col) continue;
-            
-            var adjacentCell = gameBoard[r][c];
-            
-            if (adjacentCell.flagged) {
-                flagCount++;
-                // Verificar si la bandera es incorrecta
-                if (!adjacentCell.mined) {
-                    hasIncorrectFlag = true;
-                }
-            } else if (!adjacentCell.opened) {
-                // Agregar a celdas a revelar (solo las no abiertas)
-                cellsToReveal.push({row: r, col: c});
-            }
-        }
-    }
-    // Si hay banderas incorrectas, perder el juego
-    if (hasIncorrectFlag) {
-        gameLose(gameBoard);
-        return;
-    }
+	// Definir los límites exactos del área 3x3
+	var startRow = Math.max(0, row - 1);
+	var endRow = Math.min(boardSize - 1, row + 1);
+	var startCol = Math.max(0, col - 1);
+	var endCol = Math.min(boardSize - 1, col + 1);
 
-    // Solo si el conteo de banderas coincide exactamente
-    if (flagCount === cell.neighborMineCount) {
-        // Revelar SOLO las celdas adyacentes en el área 3x3
-        for (var i = 0; i < cellsToReveal.length; i++) {
-            var r = cellsToReveal[i].row;
-            var c = cellsToReveal[i].col;
-            
-            updateCellImage(gameBoard, r, c, false);
-            
-            // Si es una mina, perder inmediatamente
-            if (gameBoard[r][c].mined) {
-                gameLose(gameBoard);
-                return;
-            }
-        }
-    }
+	for (var r = startRow; r <= endRow; r++) {
+		for (var c = startCol; c <= endCol; c++) {
+			if (r === row && c === col) continue;
+
+			var adjacentCell = gameBoard[r][c];
+
+			if (adjacentCell.flagged) {
+				flagCount++;
+				// Verificar si la bandera es incorrecta
+				if (!adjacentCell.mined) {
+					hasIncorrectFlag = true;
+				}
+			} else if (!adjacentCell.opened) {
+				// Agregar a celdas a revelar (solo las no abiertas)
+				cellsToReveal.push({ row: r, col: c });
+			}
+		}
+	}
+	// Si hay banderas incorrectas, perder el juego
+	if (hasIncorrectFlag) {
+		gameLose(gameBoard);
+		return;
+	}
+
+	// Solo si el conteo de banderas coincide exactamente
+	if (flagCount === cell.neighborMineCount) {
+		// Revelar SOLO las celdas adyacentes en el área 3x3
+		for (var i = 0; i < cellsToReveal.length; i++) {
+			var r = cellsToReveal[i].row;
+			var c = cellsToReveal[i].col;
+
+			updateCellImage(gameBoard, r, c, false);
+
+			// Si es una mina, perder inmediatamente
+			if (gameBoard[r][c].mined) {
+				gameLose(gameBoard);
+				return;
+			}
+		}
+	}
 }
