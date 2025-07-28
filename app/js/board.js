@@ -207,7 +207,7 @@ function updateCellImage(gameBoard, row, col, originalClick) {
 	//Es por la recusion que se vuelve a comprobar
 	if (!boardCell.opened && !boardCell.flagged) {
 		if (boardCell.mined && originalClick) {
-			//gameLose(gameBoard);
+			gameLose(gameBoard);
 			return false;
 		} else if (boardCell.neighborMineCount > 0) {
 			var numberImgMap = {
@@ -357,7 +357,7 @@ function showRecordsModal(difficulty) {
 
 	var html = `
         <div class="records-header">
-            <span>Pos.</span>
+            <span>Pos</span>
             <span>Nombre</span>
             <span>Tiempo</span>
             <span>Fecha</span>
@@ -377,15 +377,12 @@ function showRecordsModal(difficulty) {
 				'</span>' +
 				'<span>' +
 				record.name +
-				' - ' +
 				'</span>' +
 				'<span>' +
 				record.time +
-				' - ' +
 				'</span>' +
 				'<span>' +
 				date +
-				' - ' +
 				'</span>' +
 				'</div>';
 		}
