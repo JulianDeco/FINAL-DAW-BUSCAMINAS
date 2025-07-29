@@ -2,36 +2,14 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1.0"
-		/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Minesweeper</title>
-		<link
-			rel="icon"
-			type="image/png"
-			href="./app/img/mine-menu-icon.png"
-		/>
-		<link
-			rel="stylesheet"
-			href="./app/styles/normalize.css"
-		/>
-		<link
-			rel="stylesheet"
-			href="./app/styles/style.css"
-		/>
-		<script
-			src="./app/js/global_variables.js"
-			defer
-		></script>
-		<script
-			src="./app/js/board.js"
-			defer
-		></script>
-		<script
-			src="./app/js/main.js"
-			defer
-		></script>
+		<link rel="icon" type="image/png" href="./app/img/mine-menu-icon.png" />
+		<link rel="stylesheet" href="./app/styles/normalize.css" />
+		<link rel="stylesheet" href="./app/styles/style.css" />
+		<script src="./app/js/global_variables.js" defer></script>
+		<script src="./app/js/board.js" defer></script>
+		<script src="./app/js/main.js" defer></script>
 	</head>
 	<body>
 		<header>
@@ -73,10 +51,7 @@
 						</div>
 					</div>
 					<div class="game-reset">
-						<button
-							class="start-reset-btn"
-							id="reset-btn"
-						>
+						<button class="start-reset-btn" id="reset-btn">
 							<img
 								src="./app/img/smiley-face.png"
 								alt="Face"
@@ -87,38 +62,70 @@
 					<div class="difficulty-selector">
 						<label for="difficulty-select">Dificultad:</label>
 						<select id="difficulty-select">
-							<option
-								value="easy"
-								selected
-							>
-								Fácil
-							</option>
+							<option value="easy" selected>Fácil</option>
 							<option value="medium">Media</option>
 							<option value="hard">Difícil</option>
 						</select>
+					</div>
+					<div class="ranking-button">
+						<button id="show-ranking-btn" class="ranking-btn">
+							<img
+								src="./app/img/ranking.png"
+								alt="Ranking"
+								class="ranking-button-img"
+							/>
+						</button>
 					</div>
 				</div>
 				<div class="game-board"></div>
 			</div>
 		</main>
-		<div
-			id="win-modal"
-			class="modal hidden"
-		>
+		<div id="win-modal" class="modal hidden">
 			<div class="modal-content">
 				<h2>¡Ganaste!</h2>
 				<p>Felicitaciones, encontraste todas las minas.</p>
-				<button id="close-modal">Cerrar</button>
+				<label for="nick-name"
+					>Ingrese un nombre para el ranking:</label
+				>
+				<input type="text" id="nick-name" name="nick-name" />
+				<button id="close-modal-ok">OK</button>
+				<button id="close-modal-win">CLOSE</button>
 			</div>
 		</div>
-
+		<div id="lose-modal" class="modal hidden">
+			<div class="modal-content">
+				<h2>¡Perdiste!</h2>
+				<p>Vuelve a intentarlo.</p>
+				<button id="close-modal-lose">CLOSE</button>
+			</div>
+		</div>
+		<div id="records-modal" class="modal hidden">
+			<div class="modal-content">
+				<h2>🏆 Mejores Tiempos</h2>
+				<div class="difficulty-tabs">
+					<button class="tab active" data-difficulty="all">
+						Todos
+					</button>
+					<button class="tab" data-difficulty="easy">Fácil</button>
+					<button class="tab" data-difficulty="medium">Media</button>
+					<button class="tab" data-difficulty="hard">Difícil</button>
+				</div>
+				<div id="records-table">
+					<!-- Aca se cargan los records -->
+				</div>
+				<button id="close-record-modal">CLOSE</button>
+			</div>
+		</div>
 		<section class="footer-board">
 			<div class="footer-board-difficulty">
 				<div class="difficulty-selector"></div>
 			</div>
 		</section>
 		<footer>
-			<p>Desarrollo y Arquitecturas Web 2025 - Proyecto Final</p>
+			<p>
+				Desarrollo y Arquitecturas Web 2025 - Proyecto Final -
+				<a href="./app/contact.html">Contacto</a>
+			</p>
 		</footer>
 	</body>
 </html>
