@@ -1,3 +1,4 @@
+'use strict';
 function showError(input, message) {
 	var formGroup = input.parentNode;
 	var errorElement = formGroup.querySelector('.error-message');
