@@ -2,6 +2,10 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 	initGame();
+	addClickListenerToButtonFace();
+	addEventListenerToSpaceKey();
+	addClickListenerToModal();
+	addClickListenerToButtonRanking();
 });
 
 // Selector de dificultad

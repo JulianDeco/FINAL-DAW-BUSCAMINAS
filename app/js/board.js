@@ -7,10 +7,6 @@ function initGame() {
 	gameBoard = createBoard(gameVar.boardSize, gameVar.minesCount);
 	renderBoard(gameVar.boardSize);
 	addClickListenerToCells(gameBoard);
-	addClickListenerToButtonFace();
-	addEventListenerToSpaceKey();
-	addClickListenerToModal();
-	addClickListenerToButtonRanking();
 }
 
 // Se formatean minutes y segundos a dos digitos cada uno
@@ -186,6 +182,7 @@ function gameLose(gameBoard) {
 	revealAllMines(gameBoard);
 	//Cambia la imagen del boton de reset
 	revealResetFace('Loose');
+	showLoseModal();
 
 	gameVar.gameStarted = false;
 	//Reiniciamos timer
@@ -417,6 +414,11 @@ function showWinModal() {
 	modal.classList.remove('hidden');
 }
 
+function showLoseModal() {
+	var modal = document.getElementById('lose-modal');
+	modal.classList.remove('hidden');
+}
+
 function gameWin() {
 	gameVar.gameOver = true;
 	clearInterval(timeInterval);
@@ -560,6 +562,25 @@ function addClickListenerToCells(gameBoard) {
 		});
 	}
 }
+function validateNickName() {
+	var nickNameInput = document.getElementById('nick-name');
+	var errorSpan = document.getElementById('nickname-error');
+
+	if (nickNameInput.value.trim().length < 3) {
+		if (!errorSpan) {
+			errorSpan = document.createElement('span');
+			errorSpan.id = 'nickname-error';
+			nickNameInput.parentNode.appendChild(errorSpan);
+		}
+		errorSpan.textContent = 'El nombre debe tener al menos 3 caracteres.';
+		return false;
+	}
+
+	if (errorSpan) {
+		errorSpan.textContent = '';
+	}
+	return true;
+}
 function addEventListenerToSpaceKey() {
 	document.addEventListener('keydown', function (e) {
 		if (e.keyCode === 32) {
@@ -571,17 +592,25 @@ function addEventListenerToSpaceKey() {
 	});
 }
 function addClickListenerToModal() {
-	var closeBtn = document.getElementById('close-modal-close');
+	var closeBtn = document.getElementById('close-modal-win');
 	closeBtn.addEventListener('click', function () {
 		document.getElementById('win-modal').classList.add('hidden');
 		resetBoard();
 		initGame();
 	});
+	var closeBtnLose = document.getElementById('close-modal-lose');
+	closeBtnLose.addEventListener('click', function () {
+		document.getElementById('lose-modal').classList.add('hidden');
+		resetBoard();
+		initGame();
+	});
 	var okBtn = document.getElementById('close-modal-ok');
 	okBtn.addEventListener('click', function () {
+		if (!validateNickName()) return;
+
+		var nickName = document.getElementById('nick-name').value.trim();
 		document.getElementById('win-modal').classList.add('hidden');
-		var nickName = document.getElementById('nick-name');
-		saveWinRecords(nickName.value);
+		saveWinRecords(nickName);
 	});
 }
 
